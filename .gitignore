@@ -1,0 +1,43 @@
+﻿# Entornos virtuales
+.venv/
+venv/
+env/
+
+# Variables y secretos
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Bases de datos locales
+*.sqlite3
+*.db
+*.dump
+*.backup
+
+# Respaldos
+respaldo*.sql
+*_backup.sql
+
+# Archivos privados y generados
+media/
+private_uploads/
+staticfiles/
+
+# Credenciales
+credenciales*.csv
+
+# Editores y sistema
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+
+database.sql
+config/settings.sqlite_backup.py

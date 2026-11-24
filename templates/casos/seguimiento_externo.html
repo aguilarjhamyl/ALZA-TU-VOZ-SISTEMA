@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load catalogo %}
+
+{% block title %}Seguimiento de reporte institucional | Alza Tu Voz{% endblock %}
+
+{% block content %}
+<section class="workflow-page">
+    <div class="container workflow-container workflow-container--narrow">
+        <div class="workflow-heading">
+            <span class="eyebrow">SEGUIMIENTO INSTITUCIONAL</span>
+            <h1>Estado de tu reporte</h1>
+            <p>Esta vista está disponible únicamente para personal autorizado con sesión iniciada.</p>
+        </div>
+        <article class="workflow-card">
+            <div class="workflow-heading--row">
+                <div><span class="case-code">{{ caso.codigo_caso }}</span><h2>{{ caso.titulo }}</h2></div>
+                <span class="case-status" {% if caso.id_estado_caso.color_hex %}style="--case-status-color: {{ caso.id_estado_caso.color_hex }}"{% endif %}>{{ caso.id_estado_caso.nombre|catalogo }}</span>
+            </div>
+            <dl class="case-facts">
+                <div><dt>Tipo de situación</dt><dd>{{ caso.id_tipo_incidente.nombre|catalogo }}</dd></div>
+                <div><dt>Fecha de envío</dt><dd>{{ caso.creado_en|date:"d/m/Y H:i" }}</dd></div>
+                <div><dt>Última actualización</dt><dd>{{ caso.actualizado_en|date:"d/m/Y H:i" }}</dd></div>
+            </dl>
+            <p class="workflow-privacy-note"><i class="bi bi-info-circle" aria-hidden="true"></i> Para proteger la privacidad, esta vista no muestra detalles del relato, participantes ni archivos adjuntos.</p>
+        </article>
+    </div>
+</section>
+{% endblock %}

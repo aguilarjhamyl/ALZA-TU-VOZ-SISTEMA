@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% load catalogo %}
+
+{% block title %}{{ caso.codigo_caso }} | Alza Tu Voz{% endblock %}
+
+{% block content %}
+<section class="workflow-page">
+    <div class="container workflow-container">
+        <a class="workflow-back" href="{% if personal_autorizado %}{% url 'casos:mis_casos' %}{% else %}{% url 'casos:mis_casos' %}{% endif %}">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver a reportes
+        </a>
+        <div class="workflow-heading">
+            <span class="eyebrow">CASO {{ caso.codigo_caso }}</span>
+            <div class="workflow-heading--row">
+                <div>
+                    <h1>{{ caso.titulo }}</h1>
+                    <p>Registrado el {{ caso.creado_en|date:"d/m/Y H:i" }} · {{ caso.id_tipo_incidente.nombre|catalogo }}</p>
+                    {% if puede_modificar or puede_retirar %}
+                        <p class="workflow-privacy-note">Podrás gestionar este reporte hasta el {{ fecha_limite_edicion|date:"d/m/Y H:i" }}, siempre que su estado lo permita.</p>
+                    {% endif %}
+                </div>
+                <span class="case-status" {% if caso.id_estado_caso.color_hex %}style="--case-status-color: {{ caso.id_estado_caso.color_hex }}"{% endif %}>{{ caso.id_estado_caso.nombre|catalogo }}</span>
+            </div>
+            {% if puede_modificar or puede_retirar %}
+                <div class="workflow-actions">
+                    {% if puede_modificar %}<a class="btn btn--primary btn-primary" href="{% url 'casos:editar' caso.id_caso %}"><i class="bi bi-pencil" aria-hidden="true"></i> Modificar reporte</a>{% endif %}
+                    {% if puede_retirar %}
+                        <form method="post" action="{% url 'casos:retirar' caso.id_caso %}" onsubmit="return confirm('¿Retirar este reporte? Se ocultará de tu lista, pero su historial se conservará para auditoría.');">
+                            {% csrf_token %}
+                            <button class="btn btn-outline-danger" type="submit">Retirar reporte</button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="row g-4">
+            <div class="{% if personal_autorizado and not caso_final %}col-lg-8{% else %}col-12{% endif %}">
+                <article class="workflow-card">
+                    <section class="workflow-section">
+                        <h2>Descripción</h2>
+                        <p class="case-description">{{ caso.descripcion|linebreaksbr }}</p>
+                        {% if caso.detalle_sin_evidencia %}
+                            <h3>Detalles adicionales</h3>
+                            <p>{{ caso.detalle_sin_evidencia|linebreaksbr }}</p>
+                        {% endif %}
+                    </section>
+
+                    {% if respuestas %}
+                        <section class="workflow-section">
+                            <h2>Respuestas complementarias</h2>
+                            <dl class="case-facts">
+                                {% for respuesta in respuestas %}
+                                    <div><dt>{{ respuesta.pregunta.texto|catalogo }}</dt><dd>{{ respuesta.valor|default:"—"|catalogo }}</dd></div>
+                                {% endfor %}
+                            </dl>
+                        </section>
+                    {% endif %}
+
+                    {% if participantes %}
+                        <section class="workflow-section">
+                            <h2>Personas relacionadas</h2>
+                            <ul class="case-people">
+                                {% for participante in participantes %}
+                                    <li><strong>{{ participante.id_rol_participante.nombre|catalogo }}:</strong> {{ participante.nombre_referencial }}{% if participante.descripcion %} — {{ participante.descripcion }}{% endif %}</li>
+                                {% endfor %}
+                            </ul>
+                        </section>
+                    {% endif %}
+
+                    {% if evidencias %}
+                        <section class="workflow-section">
+                            <h2>Archivos adjuntos</h2>
+                            <ul class="case-evidence">
+                                {% for evidencia in evidencias %}
+                                    <li>
+                                        <span><i class="bi bi-paperclip" aria-hidden="true"></i> {{ evidencia.nombre_archivo }} <small>({{ evidencia.tamano_bytes|filesizeformat }}) · Subida {{ evidencia.subida_en|date:"d/m/Y H:i" }}</small></span>
+                                        {% if puede_descargar_evidencias %}<a href="{% url 'casos:descargar_evidencia' evidencia.id_evidencia %}">Descargar</a>{% else %}<span>Conservado para auditoría</span>{% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </section>
+                    {% endif %}
+
+                    <section class="workflow-section">
+                        <h2>Historial de estado</h2>
+                        {% if historial %}
+                            <ol class="case-timeline">
+                                {% for evento in historial %}
+                                    <li>
+                                        <time>{{ evento.creado_en|date:"d/m/Y H:i" }}</time>
+                                        <strong>{% if evento.id_estado_anterior %}{{ evento.id_estado_anterior.nombre|catalogo }} → {% endif %}{{ evento.id_estado_nuevo.nombre|catalogo }}</strong>
+                                        {% if evento.observacion %}<p>{{ evento.observacion }}</p>{% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ol>
+                        {% else %}
+                            <p class="workflow-empty">Aún no hay cambios registrados.</p>
+                        {% endif %}
+                    </section>
+                </article>
+
+                <article class="workflow-card workflow-card--spaced">
+                    <section class="workflow-section">
+                        <h2>Mensajes del caso</h2>
+                        {% if mensajes_caso %}
+                            <div class="case-messages">
+                                {% for mensaje in mensajes_caso %}
+                                    <article class="case-message">
+                                        <div><strong>{{ mensaje.get_tipo_display }} · {% if mensaje.autor_tipo == "SISTEMA" %}Titular del reporte{% elif mensaje.autor_tipo == "AUTORIDAD" %}Personal autorizado{% else %}Denunciante{% endif %}</strong><time>{{ mensaje.creado_en|date:"d/m/Y H:i" }}</time></div>
+                                        <p>{{ mensaje.contenido|linebreaksbr }}</p>
+                                    </article>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="workflow-empty">Todavía no hay mensajes asociados a este caso.</p>
+                        {% endif %}
+                    </section>
+                    {% if personal_autorizado and not caso_final %}
+                        <section class="workflow-section">
+                            <h3>Enviar mensaje</h3>
+                            <form method="post" class="workflow-form">
+                                {% csrf_token %}<input type="hidden" name="accion" value="mensaje">
+                                {% include "includes/form_fields.html" with form=pregunta_form %}
+                                <button class="btn btn--primary btn-primary" type="submit">Guardar mensaje</button>
+                            </form>
+                        </section>
+                    {% elif caso.id_estado_caso.codigo == "CON_PREGUNTA" %}
+                        <section class="workflow-section">
+                            <h3>Responder al equipo</h3>
+                            <form method="post" class="workflow-form">
+                                {% csrf_token %}<input type="hidden" name="accion" value="responder">
+                                {% include "includes/form_fields.html" with form=respuesta_form %}
+                                <button class="btn btn--primary btn-primary" type="submit">Enviar respuesta</button>
+                            </form>
+                        </section>
+                    {% endif %}
+                </article>
+            </div>
+
+            {% if personal_autorizado and not caso_final %}
+                <aside class="col-lg-4">
+                    <section class="workflow-card workflow-card--compact">
+                        <h2>Actualizar estado</h2>
+                        <form method="post" class="workflow-form">
+                            {% csrf_token %}<input type="hidden" name="accion" value="estado">
+                            {% include "includes/form_fields.html" with form=estado_form %}
+                            <button class="btn btn--primary btn-primary" type="submit">Guardar estado</button>
+                        </form>
+                    </section>
+                    <section class="workflow-card workflow-card--compact workflow-card--spaced">
+                        <h2>Registrar seguimiento</h2>
+                        <form method="post" class="workflow-form">
+                            {% csrf_token %}<input type="hidden" name="accion" value="seguimiento">
+                            {% include "includes/form_fields.html" with form=accion_form %}
+                            <button class="btn btn--primary btn-primary" type="submit">Agregar acción</button>
+                        </form>
+                    </section>
+                    {% if acciones %}
+                        <section class="workflow-card workflow-card--compact workflow-card--spaced">
+                            <h2>Acciones registradas</h2>
+                            <ul class="case-actions">
+                                {% for accion in acciones %}
+                                    <li><strong>{{ accion.id_tipo_accion.nombre|catalogo }}</strong><span>{{ accion.get_estado_display }}</span><p>{{ accion.descripcion }}</p>{% if accion.fecha_programada %}<small>Programada: {{ accion.fecha_programada|date:"d/m/Y" }}</small>{% endif %}</li>
+                                {% endfor %}
+                            </ul>
+                        </section>
+                    {% endif %}
+                </aside>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

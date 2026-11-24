@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="home-hero">
+    <div class="home-hero__glow" aria-hidden="true"></div>
+    <div class="container home-hero__content">
+        <h1 class="home-hero__project-title">Alza TU Voz</h1>
+        <p>
+            Un espacio de orientación, reporte y acompañamiento para la
+            comunidad educativa de la Unidad Educativa Patacamaya de Convenio.
+            No realiza diagnósticos clínicos.
+        </p>
+        <div class="home-hero__actions">
+            <a class="btn home-btn home-btn--primary" href="{% url 'casos:crear' %}">
+                Reportar una situación <i class="bi bi-arrow-right" aria-hidden="true"></i>
+            </a>
+            <a class="btn home-btn home-btn--outline" href="{% if user.is_authenticated %}{% url 'casos:mis_casos' %}{% else %}{% url 'registro' %}{% endif %}">
+                <i class="bi bi-person-plus" aria-hidden="true"></i>
+                {% if user.is_authenticated %}Mis reportes{% else %}Crear una cuenta{% endif %}
+            </a>
+        </div>
+    </div>
+</section>
+
+<section id="como-funciona" class="home-section home-section--soft">
+    <div class="container">
+        <div class="home-section__heading">
+            <h2>¿Cómo funciona?</h2>
+            <span class="home-heading-rule" aria-hidden="true"></span>
+            <p>Un proceso para reportar situaciones, organizar su atención y acercarte al apoyo que necesitas.</p>
+        </div>
+
+        <div class="row g-4">
+            <article class="col-md-4">
+                <div class="home-step card h-100">
+                    <span class="home-step__icon" aria-hidden="true">
+                        <i class="bi bi-person-plus"></i>
+                    </span>
+                    <h3>1. Identifica y reporta</h3>
+                    <p>
+                        Registra situaciones de convivencia, violencia o
+                        afectación del bienestar que requieren atención.
+                    </p>
+                </div>
+            </article>
+            <article class="col-md-4">
+                <div class="home-step card h-100">
+                    <span class="home-step__icon" aria-hidden="true">
+                        <i class="bi bi-chat-dots"></i>
+                    </span>
+                    <h3>2. Evalúa y organiza</h3>
+                    <p>
+                        La información y los factores de riesgo ayudan al
+                        personal autorizado a priorizar la revisión.
+                    </p>
+                </div>
+            </article>
+            <article class="col-md-4">
+                <div class="home-step card h-100">
+                    <span class="home-step__icon" aria-hidden="true">
+                        <i class="bi bi-heart"></i>
+                    </span>
+                    <h3>3. Da seguimiento</h3>
+                    <p>
+                        Consulta cambios de estado y acciones de apoyo. Si eres
+                        estudiante, puedes usar el chatbot como apoyo posterior
+                        al reporte.
+                    </p>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="home-section home-section--white">
+    <div class="container">
+        <div class="row align-items-center g-4 g-lg-5">
+            <div class="col-lg-6">
+                <blockquote class="home-quote">
+                    <p>
+                        Un sistema web para identificar, evaluar de forma
+                        orientativa y gestionar casos que afectan la convivencia
+                        escolar y el bienestar psicoemocional.
+                    </p>
+                    <footer>— Comunidad educativa</footer>
+                </blockquote>
+            </div>
+            <div class="col-lg-6">
+                <h2 class="home-about__title">Acerca del sistema</h2>
+                <p class="home-about__text">
+                    Centraliza reportes, evidencias, niveles orientativos de
+                    riesgo, alertas, historial y acciones de seguimiento para
+                    apoyar la respuesta institucional. Las decisiones y
+                    derivaciones corresponden al personal autorizado.
+                </p>
+                <div class="home-pills">
+                    <span><i class="bi bi-shield-lock" aria-hidden="true"></i> Cuidado de la información</span>
+                    <span><i class="bi bi-chat-heart" aria-hidden="true"></i> Chatbot de apoyo estudiantil</span>
+                    <span><i class="bi bi-people" aria-hidden="true"></i> Acompañamiento escolar</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="home-section home-section--soft">
+    <div class="container">
+        <div class="home-section__heading">
+            <h2>Nosotros</h2>
+            <span class="home-heading-rule" aria-hidden="true"></span>
+        </div>
+        <div class="row g-4">
+            <article class="col-md-6">
+                <div class="home-purpose card h-100">
+                    <div class="home-purpose__heading">
+                        <span class="home-purpose__icon" aria-hidden="true">
+                            <i class="bi bi-flag"></i>
+                        </span>
+                        <h3>Misión</h3>
+                    </div>
+                    <p>
+                        Promover un entorno educativo seguro, inclusivo y
+                        saludable, acercando a estudiantes y familias a
+                        orientación y apoyo oportunos.
+                    </p>
+                </div>
+            </article>
+            <article class="col-md-6">
+                <div class="home-purpose card h-100">
+                    <div class="home-purpose__heading">
+                        <span class="home-purpose__icon" aria-hidden="true">
+                            <i class="bi bi-eye"></i>
+                        </span>
+                        <h3>Visión</h3>
+                    </div>
+                    <p>
+                        Contribuir al bienestar integral de la comunidad
+                        educativa y fortalecer la convivencia mediante
+                        herramientas accesibles de orientación.
+                    </p>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="home-section home-section--white">
+    <div class="container">
+        <div class="home-section__heading">
+            <h2>Servicios</h2>
+            <span class="home-heading-rule" aria-hidden="true"></span>
+            <p>Herramientas diseñadas para acercarte a orientación y acompañamiento.</p>
+        </div>
+        <div class="row g-4">
+            <article class="col-sm-6 col-lg-3">
+                <div class="home-service h-100">
+                    <span class="home-service__icon" aria-hidden="true"><i class="bi bi-person-lines-fill"></i></span>
+                    <h3>Acceso para estudiantes y familias</h3>
+                    <p>Crea una cuenta para utilizar los servicios disponibles.</p>
+                </div>
+            </article>
+            <article class="col-sm-6 col-lg-3">
+                <div class="home-service h-100">
+                    <span class="home-service__icon" aria-hidden="true"><i class="bi bi-chat-heart"></i></span>
+                    <h3>Chatbot de apoyo</h3>
+                    <p>Respuestas guiadas para estudiantes después de registrar una situación. El prototipo no utiliza IA generativa ni sustituye el apoyo humano.</p>
+                    <a class="home-service__status" href="{% url 'casos:crear' %}">
+                        Reportar primero
+                    </a>
+                </div>
+            </article>
+            <article class="col-sm-6 col-lg-3">
+                <div class="home-service h-100">
+                    <span class="home-service__icon" aria-hidden="true"><i class="bi bi-shield-check"></i></span>
+                    <h3>Cuidado y privacidad</h3>
+                    <p>La información se gestiona según los permisos de cada cuenta.</p>
+                </div>
+            </article>
+            <article class="col-sm-6 col-lg-3">
+                <div class="home-service h-100">
+                    <span class="home-service__icon" aria-hidden="true"><i class="bi bi-people"></i></span>
+                    <h3>Acompañamiento escolar</h3>
+                    <p>Acércate al equipo responsable de tu unidad educativa.</p>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="home-section home-section--soft">
+    <div class="container">
+        <div class="home-section__heading">
+            <h2>¿Sobre qué puedes buscar orientación?</h2>
+            <span class="home-heading-rule" aria-hidden="true"></span>
+            <p>Situaciones que pueden afectar la convivencia escolar y el bienestar emocional.</p>
+        </div>
+        <div class="row g-3">
+            <div class="col-sm-6 col-lg-3"><div class="home-topic"><i class="bi bi-chat-square-text" aria-hidden="true"></i><span>Acoso verbal o burlas</span></div></div>
+            <div class="col-sm-6 col-lg-3"><div class="home-topic"><i class="bi bi-heart-pulse" aria-hidden="true"></i><span>Acoso físico o violencia</span></div></div>
+            <div class="col-sm-6 col-lg-3"><div class="home-topic"><i class="bi bi-person-dash" aria-hidden="true"></i><span>Exclusión o aislamiento</span></div></div>
+            <div class="col-sm-6 col-lg-3"><div class="home-topic"><i class="bi bi-phone" aria-hidden="true"></i><span>Ciberacoso</span></div></div>
+            <div class="col-sm-6 col-lg-3"><div class="home-topic"><i class="bi bi-emoji-frown" aria-hidden="true"></i><span>Malestar emocional</span></div></div>
+            <div class="col-sm-6 col-lg-3"><div class="home-topic"><i class="bi bi-person-video3" aria-hidden="true"></i><span>Conflictos en la escuela</span></div></div>
+            <div class="col-sm-6 col-lg-3"><div class="home-topic"><i class="bi bi-universal-access" aria-hidden="true"></i><span>Discriminación</span></div></div>
+            <div class="col-sm-6 col-lg-3"><div class="home-topic"><i class="bi bi-people" aria-hidden="true"></i><span>Conflictos entre compañeros</span></div></div>
+        </div>
+    </div>
+</section>
+
+<section id="privacidad" class="home-section home-section--support">
+    <div class="container">
+        <div class="row g-4">
+            <article class="col-md-6">
+                <div class="home-support-card h-100">
+                    <div class="home-support-card__heading">
+                        <i class="bi bi-shield-lock" aria-hidden="true"></i>
+                        <h2>Cuidado y privacidad</h2>
+                    </div>
+                    <p>
+                        El acceso a la información está limitado de acuerdo
+                        con los permisos asignados a cada cuenta. Comparte tus
+                        datos únicamente en los canales institucionales.
+                    </p>
+                    <div class="home-support-card__note">
+                        <i class="bi bi-lock" aria-hidden="true"></i>
+                        Protege tus credenciales y no las compartas.
+                    </div>
+                </div>
+            </article>
+            <article class="col-md-6">
+                <div class="home-support-card h-100">
+                    <div class="home-support-card__heading">
+                        <i class="bi bi-headset" aria-hidden="true"></i>
+                        <h2>Orientación y ayuda</h2>
+                    </div>
+                    <p>
+                        Para recibir orientación, acércate al equipo responsable
+                        de tu unidad educativa o a una persona adulta de confianza.
+                    </p>
+                    <div class="home-support-card__urgent">
+                        <i class="bi bi-exclamation-triangle" aria-hidden="true"></i>
+                        <div>
+                            <strong>¿Necesitas ayuda inmediata?</strong>
+                            <span>Busca ahora a una persona adulta de confianza o al personal de tu unidad educativa.</span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load catalogo %}
+
+{% block title %}Resultado de actividad | Alza Tu Voz{% endblock %}
+
+{% block content %}
+<section class="workflow-page">
+    <div class="container workflow-container workflow-container--narrow">
+        <div class="workflow-heading">
+            <span class="eyebrow">REGISTRO GUARDADO</span>
+            <h1>{{ aplicacion.id_test.nombre|catalogo }}</h1>
+            <p>Completada el {{ aplicacion.finalizada_en|date:"d/m/Y H:i" }}</p>
+        </div>
+        <article class="workflow-card">
+            {% if aplicacion.puntaje_total != None %}
+                <div class="test-score"><span>Puntaje orientativo</span><strong>{{ aplicacion.puntaje_total }}</strong></div>
+            {% endif %}
+            <p>{{ aplicacion.interpretacion_orientativa|default:"La actividad fue registrada." }}</p>
+            <div class="workflow-notice"><i class="bi bi-heart" aria-hidden="true"></i><p>Este resultado no es un diagnóstico. Si tienes inquietudes, conversa con una persona adulta de confianza o con un profesional de apoyo.</p></div>
+            <a class="btn btn--primary btn-primary" href="{% url 'casos:tests' %}">Volver a actividades</a>
+        </article>
+    </div>
+</section>
+{% endblock %}

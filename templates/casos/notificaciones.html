@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load catalogo %}
+
+{% block title %}Notificaciones | Alza Tu Voz{% endblock %}
+
+{% block content %}
+<section class="workflow-page">
+    <div class="container workflow-container">
+        <div class="workflow-heading workflow-heading--row">
+            <div><span class="eyebrow">AVISOS DE TU CUENTA</span><h1>Notificaciones</h1><p>Solicitudes, casos y actualizaciones relacionadas con tu cuenta y tu rol.</p></div>
+            {% if notificaciones %}
+                <div class="d-flex flex-wrap gap-2">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="accion" value="marcar_leidas">
+                        <button class="btn btn--secondary btn-outline-secondary" type="submit">Marcar todas como leídas</button>
+                    </form>
+                    <form method="post" onsubmit="return confirm('¿Deseas limpiar todas tus notificaciones? Esta acción no se puede deshacer.');">
+                        {% csrf_token %}
+                        <input type="hidden" name="accion" value="limpiar">
+                        <button class="btn btn--secondary btn-outline-danger" type="submit">Limpiar</button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+        {% if notificaciones %}
+            <div class="workflow-list">
+                {% for aviso in notificaciones %}
+                    <article class="workflow-list-card{% if not aviso.leida %} workflow-list-card--unread{% endif %}">
+                        <div class="workflow-list-card__main">
+                            <span class="eyebrow">{{ aviso.tipo }}</span>
+                            <p>{{ aviso.mensaje|catalogo }}</p>
+                            <small>{{ aviso.creado_en|date:"d/m/Y H:i" }}</small>
+                        </div>
+                        {% if aviso.url %}
+                            <a class="workflow-text-link" href="{{ aviso.url }}">{{ aviso.enlace }} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                        {% endif %}
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="workflow-empty-card"><span class="workflow-empty-card__icon"><i class="bi bi-bell-slash" aria-hidden="true"></i></span><h2>No tienes notificaciones</h2><p>Cuando haya una actualización, la verás aquí.</p></div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

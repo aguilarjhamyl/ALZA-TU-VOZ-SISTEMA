@@ -1,0 +1,58 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}{% if es_edicion %}Editar{% else %}Nuevo{% endif %} · {{ tabla_titulo }} | Alza Tu Voz{% endblock %}
+
+{% block content %}
+<section class="admin-dashboard admin-table-page">
+    <div class="admin-dashboard__container">
+        <nav class="admin-table-breadcrumb" aria-label="Ruta de navegación">
+            <a href="{% url 'dashboard:inicio' %}"><i class="bi bi-grid-1x2" aria-hidden="true"></i> Panel</a>
+            <i class="bi bi-chevron-right" aria-hidden="true"></i>
+            <a href="{% url 'dashboard:tabla' tabla_slug %}">{{ tabla_titulo }}</a>
+            <i class="bi bi-chevron-right" aria-hidden="true"></i>
+            <span>{% if es_edicion %}Editar registro{% else %}Nuevo registro{% endif %}</span>
+        </nav>
+
+        <header class="admin-table-heading">
+            <div>
+                <span class="admin-dashboard__eyebrow">GESTIÓN INSTITUCIONAL</span>
+                <h1>{% if es_edicion %}Editar registro{% else %}Nuevo registro{% endif %}</h1>
+                <p>{{ tabla_titulo }}</p>
+            </div>
+            <a class="admin-icon-btn admin-icon-btn--gray" href="{% url 'dashboard:tabla' tabla_slug %}"
+               title="Volver a la tabla" aria-label="Volver a la tabla">
+                <i class="bi bi-arrow-left" aria-hidden="true"></i>
+            </a>
+        </header>
+
+        <section class="admin-panel admin-record-form">
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                {% if formulario.non_field_errors %}
+                <div class="admin-table-message admin-table-message--error" role="alert">
+                    {% for error in formulario.non_field_errors %}<span>{{ error }}</span>{% endfor %}
+                </div>
+                {% endif %}
+                <div class="admin-record-form__grid">
+                    {% for field in formulario %}
+                    <div class="admin-record-form__field{% if field.field.widget.input_type == 'checkbox' %} admin-record-form__field--checkbox{% endif %}">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}
+                        {% for error in field.errors %}<span class="admin-record-form__error">{{ error }}</span>{% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="admin-record-form__actions">
+                    <a class="admin-button admin-button--secondary" href="{% url 'dashboard:tabla' tabla_slug %}">
+                        <i class="bi bi-x-lg" aria-hidden="true"></i> Cancelar
+                    </a>
+                    <button class="admin-button admin-button--teal" type="submit">
+                        <i class="bi bi-floppy" aria-hidden="true"></i> Guardar registro
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
+</section>
+{% endblock %}

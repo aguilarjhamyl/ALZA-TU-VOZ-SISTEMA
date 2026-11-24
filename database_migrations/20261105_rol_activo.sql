@@ -1,0 +1,6 @@
+BEGIN;
+
+ALTER TABLE public.rol
+    ADD COLUMN IF NOT EXISTS activo boolean NOT NULL DEFAULT true;
+
+COMMIT;

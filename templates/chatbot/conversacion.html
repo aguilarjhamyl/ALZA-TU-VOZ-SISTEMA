@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Conversación | Alza Tu Voz{% endblock %}
+
+{% block content %}
+<section class="workflow-page">
+    <div class="container workflow-container workflow-container--narrow">
+        <a class="workflow-back" href="{% if personal_autorizado and not es_propietario %}{% url 'casos:atencion_chatbot' %}{% else %}{% url 'casos:chatbot' %}{% endif %}">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver
+        </a>
+        <div class="workflow-heading">
+            <span class="eyebrow">CONVERSACIÓN {{ conversacion.id_conversacion }}</span>
+            <h1>Un espacio para conversar</h1>
+            <p>Prototipo de orientación guiada; no es una herramienta de inteligencia artificial ni de diagnóstico.</p>
+        </div>
+
+        <div class="chat-panel">
+            <div class="chat-panel__messages" aria-live="polite">
+                {% for mensaje in mensajes_chatbot %}
+                    <article class="chat-message chat-message--{{ mensaje.emisor|lower }}">
+                        <div class="chat-message__meta">
+                            <strong>{{ mensaje.get_emisor_display }}</strong>
+                            <time>{{ mensaje.creado_en|date:"d/m/Y H:i" }}</time>
+                        </div>
+                        <p>{{ mensaje.contenido|linebreaksbr }}</p>
+                        {% if mensaje.requiere_atencion_humana %}
+                            <span class="chat-message__flag"><i class="bi bi-person-raised-hand" aria-hidden="true"></i> Se ha solicitado revisión por el equipo de apoyo.</span>
+                        {% endif %}
+                    </article>
+                {% endfor %}
+            </div>
+            {% if personal_autorizado and not es_propietario %}
+                <div class="workflow-notice"><i class="bi bi-person-check" aria-hidden="true"></i><p>Tu respuesta será visible para la persona que inició esta conversación. Mantén un tono respetuoso y evita pedir datos personales innecesarios.</p></div>
+            {% else %}
+                <div class="workflow-privacy-note"><i class="bi bi-info-circle" aria-hidden="true"></i> Si estás en peligro inmediato, contacta a una persona adulta de confianza o a los servicios locales de emergencia.</div>
+            {% endif %}
+            {% if limite_mensajes_alcanzado %}
+                <div class="workflow-notice"><i class="bi bi-info-circle" aria-hidden="true"></i><p>Esta conversación alcanzó el límite de 20 mensajes tuyos. Puedes consultar el historial o iniciar otra conversación.</p></div>
+            {% else %}
+                <form method="post" class="chat-compose">
+                    {% csrf_token %}
+                    {% include "includes/form_fields.html" with form=form %}
+                    <button class="btn btn--primary btn-primary" type="submit"><i class="bi bi-send" aria-hidden="true"></i> Enviar</button>
+                    {% if es_propietario %}<small>Máximo 2.000 caracteres por mensaje y 20 mensajes tuyos por conversación.</small>{% endif %}
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

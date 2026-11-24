@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Atención de conversaciones | Alza Tu Voz{% endblock %}
+
+{% block content %}
+<section class="workflow-page">
+    <div class="container workflow-container">
+        <div class="workflow-heading">
+            <span class="eyebrow">ESPACIO INSTITUCIONAL</span>
+            <h1>Conversaciones que requieren atención</h1>
+            <p>Revisa las conversaciones marcadas para apoyo humano y responde con cuidado.</p>
+        </div>
+        {% if conversaciones %}
+            <div class="workflow-list">
+                {% for conversacion in conversaciones %}
+                    <article class="workflow-list-card workflow-list-card--unread">
+                        <div class="workflow-list-card__main">
+                            <span class="case-code">Conversación {{ conversacion.id_conversacion }}</span>
+                            <p>Iniciada el {{ conversacion.iniciada_en|date:"d/m/Y H:i" }}</p>
+                        </div>
+                        <a class="workflow-text-link" href="{% url 'casos:conversacion_chatbot' conversacion.id_conversacion %}">Revisar <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="workflow-empty-card"><span class="workflow-empty-card__icon"><i class="bi bi-check2-circle" aria-hidden="true"></i></span><h2>No hay conversaciones pendientes</h2><p>Las conversaciones que soliciten atención humana aparecerán en esta lista.</p></div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

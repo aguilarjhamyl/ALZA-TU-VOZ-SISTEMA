@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Crear cuenta | Alza Tu Voz{% endblock %}
+
+{% block content %}
+<section class="auth-page auth-page--register">
+    <div class="container auth-layout">
+        <div class="row g-4 align-items-stretch">
+            <div class="col-12 col-lg-5">
+                <aside class="auth-aside h-100" data-reveal>
+                    <span class="auth-aside__icon" aria-hidden="true"><i class="bi bi-heart-fill"></i></span>
+                    <span class="eyebrow">ALZA TU VOZ</span>
+                    <h1>Una comunidad educativa que te escucha.</h1>
+                    <p>
+                        El registro está disponible para estudiantes y familiares con
+                        cualquier correo válido. La cuenta se habilita cuando
+                        administración aprueba la solicitud.
+                    </p>
+                    <ul class="auth-benefits">
+                        <li><span aria-hidden="true"><i class="bi bi-envelope-check"></i></span> Confirmación de correo electrónico</li>
+                        <li><span aria-hidden="true"><i class="bi bi-person-check"></i></span> Revisión y decisión del personal autorizado</li>
+                        <li><span aria-hidden="true"><i class="bi bi-shield-lock"></i></span> Tu cuenta permanece inactiva hasta su aprobación</li>
+                    </ul>
+                    <a class="auth-aside__home" href="{% url 'inicio' %}">
+                        <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver a la página principal
+                    </a>
+                </aside>
+
+            </div>
+            <div class="col-12 col-lg-7">
+                <section class="auth-card card h-100" aria-labelledby="register-title">
+                    <div class="auth-card__heading">
+                        <span class="auth-card__eyebrow"><i class="bi bi-person-plus" aria-hidden="true"></i> REGISTRO DE CUENTA</span>
+                        <h2 id="register-title">Crear una cuenta</h2>
+                        <p>Completa tus datos. Los campos marcados son obligatorios.</p>
+                    </div>
+
+                    <form method="post" action="{% url 'registro' %}" class="auth-form d-grid gap-3">
+                        {% csrf_token %}
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger form-message form-message--error" role="alert">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+                        <div class="form-grid row g-3">
+                            {% for field in form %}
+                                <div class="form-field col-md-6{% if field.name == 'rol' %} form-field--full col-12{% endif %}">
+                                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    <div class="form-field__control{% if field.name == 'rol' %} form-field__control--select{% endif %}">
+                                        {% if field.name == "first_name" %}
+                                            <i class="bi bi-person form-field__icon" aria-hidden="true"></i>
+                                        {% elif field.name == "last_name" %}
+                                            <i class="bi bi-person form-field__icon" aria-hidden="true"></i>
+                                        {% elif field.name == "username" %}
+                                            <i class="bi bi-at form-field__icon" aria-hidden="true"></i>
+                                        {% elif field.name == "email" %}
+                                            <i class="bi bi-envelope form-field__icon" aria-hidden="true"></i>
+                                        {% elif field.name == "celular" %}
+                                            <i class="bi bi-telephone form-field__icon" aria-hidden="true"></i>
+                                        {% elif field.name == "fecha_nacimiento" %}
+                                            <i class="bi bi-calendar3 form-field__icon" aria-hidden="true"></i>
+                                        {% elif field.name == "rol" %}
+                                            <i class="bi bi-people form-field__icon" aria-hidden="true"></i>
+                                        {% else %}
+                                            <i class="bi bi-lock form-field__icon" aria-hidden="true"></i>
+                                        {% endif %}
+                                        {{ field }}
+                                        {% if field.name == "password1" or field.name == "password2" %}
+                                            <button class="password-toggle" type="button"
+                                                    data-password-toggle="{{ field.id_for_label }}"
+                                                    aria-label="Mostrar contraseña" aria-pressed="false">
+                                                <i class="bi bi-eye" aria-hidden="true"></i>
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                    {% if field.help_text %}
+                                        <small class="form-help">{{ field.help_text }}</small>
+                                    {% endif %}
+                                    {% for error in field.errors %}
+                                        <small class="form-error" role="alert">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="captcha">
+                            <div class="cf-turnstile"
+                                 data-sitekey="{{ turnstile_site_key }}"
+                                 data-theme="light"
+                                 data-language="es"></div>
+                        </div>
+
+                        <button class="btn btn--primary btn-primary auth-submit" type="submit">
+                            Enviar solicitud <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                        </button>
+                    </form>
+
+                    <p class="auth-security">
+                        <i class="bi bi-shield-lock" aria-hidden="true"></i>
+                        Te enviaremos un enlace de confirmación. Después, administración
+                        podrá aprobar o rechazar tu solicitud.
+                    </p>
+                    <p class="auth-switch">
+                        ¿Ya tienes cuenta?
+                        <a href="{% url 'login' %}">Inicia sesión</a>
+                    </p>
+                </section>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+{% endblock %}

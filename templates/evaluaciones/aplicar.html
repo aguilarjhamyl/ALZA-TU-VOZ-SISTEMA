@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load catalogo %}
+
+{% block title %}{{ test.nombre|catalogo }} | Alza Tu Voz{% endblock %}
+
+{% block content %}
+<section class="workflow-page">
+    <div class="container workflow-container workflow-container--narrow">
+        <a class="workflow-back" href="{% url 'casos:tests' %}"><i class="bi bi-arrow-left" aria-hidden="true"></i> Volver a actividades</a>
+        <div class="workflow-heading">
+            <span class="eyebrow">{% if test.formato == "DIBUJO" %}ACTIVIDAD CREATIVA{% else %}CUESTIONARIO{% endif %}</span>
+            <h1>{{ test.nombre|catalogo }}</h1>
+            {% if test.descripcion %}<p>{{ test.descripcion|catalogo }}</p>{% endif %}
+        </div>
+        <div class="workflow-notice"><i class="bi bi-info-circle" aria-hidden="true"></i><p>{{ test.nota_uso|default:"Esta actividad es orientativa y no constituye una evaluación clínica ni un diagnóstico."|catalogo }}</p></div>
+        <form method="post" enctype="multipart/form-data" class="workflow-card workflow-form">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>
+            {% endif %}
+            {% for field in form %}
+                {% if field.name == "id_caso" or field.name == "dibujo" %}
+                    <div class="workflow-field{% if field.errors %} workflow-field--error{% endif %}">
+                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} *{% endif %}</label>
+                        {{ field }}
+                        {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+                        {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+            {% if form.items %}
+                <div class="workflow-test-items">
+                    {% for item, campo, es_opcion in campos_test %}
+                        <fieldset class="workflow-test-item">
+                            <legend>{{ forloop.counter }}. {{ item.texto|catalogo }}</legend>
+                            {{ campo }}
+                            {% for error in campo.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                        </fieldset>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <button class="btn btn--primary btn-primary" type="submit">Guardar respuestas</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

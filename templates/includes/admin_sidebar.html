@@ -1,0 +1,69 @@
+<aside class="admin-sidebar" id="admin-sidebar">
+    <div class="admin-sidebar__brand">
+        <span class="admin-sidebar__brand-icon"><i class="bi bi-chat-heart-fill" aria-hidden="true"></i></span>
+        <span class="admin-sidebar__brand-text"><strong>ALZA TU VOZ</strong><small>Panel administrativo</small></span>
+    </div>
+
+    <nav class="admin-sidebar__nav" aria-label="Módulos administrativos">
+        <span class="admin-sidebar__label">GENERAL</span>
+        <a class="admin-sidebar__link{% if request.resolver_match.url_name == 'inicio' %} is-active{% endif %}"
+           href="{% url 'dashboard:inicio' %}" title="Resumen" aria-label="Resumen">
+            <i class="bi bi-grid-1x2-fill" aria-hidden="true"></i><span>Resumen</span>
+        </a>
+        <a class="admin-sidebar__link" href="{% url 'casos:mis_casos' %}"
+           title="Casos y reportes" aria-label="Casos y reportes">
+            <i class="bi bi-folder2-open" aria-hidden="true"></i><span>Casos y reportes</span>
+        </a>
+        <a class="admin-sidebar__link" href="{% url 'casos:atencion_chatbot' %}"
+           title="Atención chatbot" aria-label="Atención chatbot">
+            <i class="bi bi-chat-left-dots" aria-hidden="true"></i><span>Atención chatbot</span>
+            {% if conversaciones_pendientes %}<span class="admin-sidebar__count">{{ conversaciones_pendientes }}</span>{% endif %}
+        </a>
+        <a class="admin-sidebar__link{% if tabla_slug == 'usuarios' %} is-active{% endif %}"
+           href="{% url 'dashboard:tabla' 'usuarios' %}"
+           title="Usuarios y solicitudes" aria-label="Usuarios y solicitudes">
+            <i class="bi bi-people" aria-hidden="true"></i><span>Usuarios y solicitudes</span>
+            {% if solicitudes_pendientes %}<span class="admin-sidebar__count">{{ solicitudes_pendientes }}</span>{% endif %}
+        </a>
+        <a class="admin-sidebar__link{% if tabla_slug == 'rol' %} is-active{% endif %}"
+           href="{% url 'dashboard:tabla' 'rol' %}"
+           title="Roles y permisos" aria-label="Roles y permisos">
+            <i class="bi bi-shield-lock" aria-hidden="true"></i><span>Roles y permisos</span>
+        </a>
+
+        {% for group in admin_menu_groups %}
+        <span class="admin-sidebar__label">{{ group.title }}</span>
+        {% for item in group.items %}
+        <a class="admin-sidebar__link{% if tabla_slug == item.slug %} is-active{% endif %}"
+           href="{{ item.url }}" title="{{ item.title }}" aria-label="{{ item.title }}">
+            <i class="bi {{ item.icon }}" aria-hidden="true"></i><span>{{ item.title }}</span>
+        </a>
+        {% endfor %}
+        {% endfor %}
+
+        <span class="admin-sidebar__label">SISTEMA</span>
+        <a class="admin-sidebar__link{% if tabla_slug == 'logauditoria' %} is-active{% endif %}"
+           href="{% url 'dashboard:tabla' 'logauditoria' %}"
+           title="Auditoría del sistema" aria-label="Auditoría del sistema">
+            <i class="bi bi-journal-check" aria-hidden="true"></i><span>Auditoría del sistema</span>
+        </a>
+        <a class="admin-sidebar__link" href="{% url 'inicio' %}"
+           title="Ver sitio público" aria-label="Ver sitio público">
+            <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i><span>Ver sitio público</span>
+        </a>
+    </nav>
+
+    <div class="admin-sidebar__user">
+        <span class="admin-sidebar__avatar">
+            {% firstof usuario.first_name.0 usuario.username.0 "A" %}
+        </span>
+        <span class="admin-sidebar__user-info"><strong>{% firstof usuario.get_full_name usuario.username %}</strong><small>Administrador</small></span>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button class="admin-icon-btn admin-icon-btn--red admin-sidebar__logout" type="submit"
+                    title="Cerrar sesión" aria-label="Cerrar sesión">
+                <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+            </button>
+        </form>
+    </div>
+</aside>

@@ -1,0 +1,251 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}{{ tabla_titulo }} | Alza Tu Voz{% endblock %}
+
+{% block content %}
+<section class="admin-dashboard admin-table-page">
+    <div class="admin-dashboard__container">
+        <nav class="admin-table-breadcrumb" aria-label="Ruta de navegación">
+            <a href="{% url 'dashboard:inicio' %}"><i class="bi bi-grid-1x2" aria-hidden="true"></i> Panel</a>
+            <i class="bi bi-chevron-right" aria-hidden="true"></i>
+            <span>{{ tabla_titulo }}</span>
+        </nav>
+
+        <header class="admin-table-heading">
+            <div>
+                <span class="admin-dashboard__eyebrow">GESTIÓN INSTITUCIONAL</span>
+                <h1>{{ tabla_titulo }}</h1>
+                <p>Consulta y administra los registros disponibles en esta sección.</p>
+            </div>
+            <div class="admin-table-heading__actions">
+                <a class="admin-icon-btn admin-icon-btn--gray" href="{% url 'dashboard:inicio' %}"
+                   title="Volver al panel" aria-label="Volver al panel">
+                    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                </a>
+                {% if url_nuevo %}
+                <a class="admin-button admin-button--teal" href="{{ url_nuevo }}">
+                    <i class="bi bi-plus-lg" aria-hidden="true"></i> Nuevo registro
+                </a>
+                {% endif %}
+            </div>
+        </header>
+
+        {% for message in messages %}
+        <div class="admin-table-message admin-table-message--{{ message.tags|default:'info' }}" role="status">
+            <i class="bi bi-info-circle" aria-hidden="true"></i>
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %}
+        {% if tabla_no_disponible %}
+        <section class="admin-panel admin-table-unavailable" role="status">
+            <span class="admin-table-unavailable__icon"><i class="bi bi-database-exclamation" aria-hidden="true"></i></span>
+            <div>
+                <span class="admin-dashboard__eyebrow">MÓDULO EN CONSTRUCCIÓN</span>
+                <h2>La tabla todavía no está conectada</h2>
+                <p>Esta sección ya está integrada al panel, pero su tabla institucional no está disponible en la base de datos configurada.</p>
+                <a class="admin-button admin-button--teal" href="{% url 'dashboard:inicio' %}">
+                    <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver al panel
+                </a>
+            </div>
+        </section>
+        {% else %}
+        <section class="admin-panel admin-table-panel">
+            <div class="admin-table-toolbar">
+                <form class="admin-table-search" method="get" role="search">
+                    <label class="visually-hidden" for="tabla-search">Buscar registros</label>
+                    <i class="bi bi-search" aria-hidden="true"></i>
+                    <input id="tabla-search" type="search" name="q" value="{{ termino }}"
+                           placeholder="Buscar en esta tabla..." maxlength="100">
+                    {% if termino %}
+                    <a href="{% url 'dashboard:tabla' tabla_slug %}" class="admin-icon-btn admin-icon-btn--gray"
+                       title="Limpiar búsqueda" aria-label="Limpiar búsqueda">
+                        <i class="bi bi-x-lg" aria-hidden="true"></i>
+                    </a>
+                    {% endif %}
+                    <button class="admin-button admin-button--teal" type="submit">
+                        <i class="bi bi-search" aria-hidden="true"></i><span>Buscar</span>
+                    </button>
+                </form>
+                <span class="admin-table-count">
+                    {{ pagina.paginator.count }} registro{{ pagina.paginator.count|pluralize:"s" }}
+                </span>
+            </div>
+
+            <div class="table-responsive admin-table-scroll">
+                <table class="admin-data-table admin-managed-table">
+                    <thead>
+                        <tr>
+                            {% for columna in columnas %}<th scope="col">{{ columna|capfirst }}</th>{% endfor %}
+                            <th class="admin-managed-table__actions" scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for fila in filas %}
+                        <tr>
+                            {% for valor in fila.values %}<td>{{ valor }}</td>{% endfor %}
+                            <td class="admin-managed-table__actions">
+                                {% if tabla_slug == "rol" %}
+                                    {% if fila.object.pk == 1 or fila.object.codigo == "ADMINISTRADOR" %}
+                                    <span class="admin-table-readonly" title="El rol administrador siempre conserva acceso total">
+                                        <i class="bi bi-shield-lock" aria-hidden="true"></i> Rol protegido
+                                    </span>
+                                    {% else %}
+                                    <form method="post" action="{% url 'dashboard:alternar_estado_rol' fila.object.pk %}">
+                                        {% csrf_token %}
+                                        {% if fila.object.activo %}
+                                        <button class="admin-icon-btn admin-icon-btn--red" type="submit"
+                                                title="Inhabilitar rol" aria-label="Inhabilitar el rol {{ fila.object.nombre }}">
+                                            <i class="bi bi-toggle-on" aria-hidden="true"></i>
+                                        </button>
+                                        {% else %}
+                                        <button class="admin-icon-btn admin-icon-btn--green" type="submit"
+                                                title="Habilitar rol" aria-label="Habilitar el rol {{ fila.object.nombre }}">
+                                            <i class="bi bi-toggle-off" aria-hidden="true"></i>
+                                        </button>
+                                        {% endif %}
+                                    </form>
+                                    {% endif %}
+                                {% elif fila.estado_protegido %}
+                                    <span class="admin-table-readonly" title="El estado inicial es necesario para registrar casos">
+                                        <i class="bi bi-shield-lock" aria-hidden="true"></i> Estado protegido
+                                    </span>
+                                {% elif fila.tiene_referencias and puede_cambiar_estado %}
+                                    <form method="post" action="{% url 'dashboard:tabla_estado' tabla_slug fila.object.pk %}">
+                                        {% csrf_token %}
+                                        {% if fila.estado_activo %}
+                                        <button class="admin-icon-btn admin-icon-btn--red" type="submit"
+                                                title="Inhabilitar registro" aria-label="Inhabilitar registro">
+                                            <i class="bi bi-toggle-on" aria-hidden="true"></i>
+                                        </button>
+                                        {% else %}
+                                        <button class="admin-icon-btn admin-icon-btn--green" type="submit"
+                                                title="Habilitar registro" aria-label="Habilitar registro">
+                                            <i class="bi bi-toggle-off" aria-hidden="true"></i>
+                                        </button>
+                                        {% endif %}
+                                    </form>
+                                {% elif es_tabla_usuarios %}
+                                    {% if fila.object.estado_solicitud == "PENDIENTE" %}
+                                    <form method="post" action="{% url 'dashboard:revisar_solicitud' fila.object.pk 'aprobar' %}">
+                                        {% csrf_token %}
+                                        <button class="admin-icon-btn admin-icon-btn--green" type="submit"
+                                                title="Aprobar solicitud" aria-label="Aprobar solicitud de {{ fila.object.username }}">
+                                            <i class="bi bi-check-lg" aria-hidden="true"></i>
+                                        </button>
+                                    </form>
+                                    <form method="post" action="{% url 'dashboard:revisar_solicitud' fila.object.pk 'rechazar' %}">
+                                        {% csrf_token %}
+                                        <button class="admin-icon-btn admin-icon-btn--red" type="submit"
+                                                title="Rechazar solicitud" aria-label="Rechazar solicitud de {{ fila.object.username }}">
+                                            <i class="bi bi-x-lg" aria-hidden="true"></i>
+                                        </button>
+                                    </form>
+                                    {% else %}
+                                    <span class="admin-table-readonly"><i class="bi bi-lock" aria-hidden="true"></i> Sin acciones</span>
+                                    {% endif %}
+                                {% elif solo_lectura %}
+                                    <a class="admin-icon-btn admin-icon-btn--blue"
+                                       href="{% url 'dashboard:tabla_editar' tabla_slug fila.object.pk %}"
+                                       title="Consultar registro" aria-label="Consultar registro">
+                                        <i class="bi bi-eye" aria-hidden="true"></i>
+                                    </a>
+                                {% else %}
+                                    <a class="admin-icon-btn admin-icon-btn--blue"
+                                       href="{% url 'dashboard:tabla_ver' tabla_slug fila.object.pk %}"
+                                       title="Ver registro" aria-label="Ver registro">
+                                        <i class="bi bi-eye" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="admin-icon-btn admin-icon-btn--yellow"
+                                       href="{% url 'dashboard:tabla_editar' tabla_slug fila.object.pk %}"
+                                       title="Editar registro" aria-label="Editar registro">
+                                        <i class="bi bi-pencil" aria-hidden="true"></i>
+                                    </a>
+                                    {% if puede_eliminar %}
+                                    <form method="post" action="{% url 'dashboard:tabla_eliminar' tabla_slug fila.object.pk %}"
+                                          onsubmit="return confirm('¿Eliminar este registro? Esta acción no se puede deshacer.');">
+                                        {% csrf_token %}
+                                        <button class="admin-icon-btn admin-icon-btn--red" type="submit"
+                                                title="Eliminar registro" aria-label="Eliminar registro">
+                                            <i class="bi bi-trash3" aria-hidden="true"></i>
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td class="admin-empty-cell" colspan="{{ columnas|length|add:1 }}">
+                            {% if termino %}No se encontraron registros para “{{ termino }}”.{% else %}Todavía no hay registros disponibles.{% endif %}
+                        </td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if pagina.paginator.num_pages > 1 %}
+            <nav class="admin-table-pagination" aria-label="Paginación de registros">
+                <span>Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}</span>
+                <div class="admin-table-pagination__controls">
+                    {% if pagina.has_previous %}
+                    <a class="admin-page-link admin-page-link--label"
+                       href="?page=1{% if termino %}&amp;q={{ termino|urlencode }}{% endif %}"
+                       aria-label="Ir a la primera página" title="Primera página">
+                        <i class="bi bi-chevron-bar-left" aria-hidden="true"></i><span>Primero</span>
+                    </a>
+                    {% else %}
+                    <span class="admin-page-link admin-page-link--label is-disabled" aria-disabled="true">
+                        <i class="bi bi-chevron-bar-left" aria-hidden="true"></i><span>Primero</span>
+                    </span>
+                    {% endif %}
+                    {% if pagina.has_previous %}
+                    <a class="admin-page-link admin-page-link--label"
+                       href="?page={{ pagina.previous_page_number }}{% if termino %}&amp;q={{ termino|urlencode }}{% endif %}"
+                       aria-label="Página anterior" title="Página anterior">
+                        <i class="bi bi-chevron-left" aria-hidden="true"></i><span>Anterior</span>
+                    </a>
+                    {% else %}
+                    <span class="admin-page-link admin-page-link--label is-disabled" aria-disabled="true">
+                        <i class="bi bi-chevron-left" aria-hidden="true"></i><span>Anterior</span>
+                    </span>
+                    {% endif %}
+                    {% for item in paginas %}
+                        {% if item.es_ellipsis %}
+                        <span class="admin-page-ellipsis" aria-hidden="true">…</span>
+                        {% elif item.es_actual %}
+                        <span class="admin-page-link is-current" aria-current="page">{{ item.numero }}</span>
+                        {% else %}
+                        <a class="admin-page-link"
+                           href="?page={{ item.numero }}{% if termino %}&amp;q={{ termino|urlencode }}{% endif %}"
+                           aria-label="Ir a la página {{ item.numero }}">{{ item.numero }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    {% if pagina.has_next %}
+                    <a class="admin-page-link admin-page-link--label"
+                       href="?page={{ pagina.next_page_number }}{% if termino %}&amp;q={{ termino|urlencode }}{% endif %}"
+                       aria-label="Página siguiente" title="Página siguiente">
+                        <span>Siguiente</span><i class="bi bi-chevron-right" aria-hidden="true"></i>
+                    </a>
+                    {% else %}
+                    <span class="admin-page-link admin-page-link--label is-disabled" aria-disabled="true">
+                        <span>Siguiente</span><i class="bi bi-chevron-right" aria-hidden="true"></i>
+                    </span>
+                    {% endif %}
+                    {% if pagina.has_next %}
+                    <a class="admin-page-link admin-page-link--label"
+                       href="?page={{ pagina.paginator.num_pages }}{% if termino %}&amp;q={{ termino|urlencode }}{% endif %}"
+                       aria-label="Ir a la última página" title="Última página">
+                        <span>Último</span><i class="bi bi-chevron-bar-right" aria-hidden="true"></i>
+                    </a>
+                    {% else %}
+                    <span class="admin-page-link admin-page-link--label is-disabled" aria-disabled="true">
+                        <span>Último</span><i class="bi bi-chevron-bar-right" aria-hidden="true"></i>
+                    </span>
+                    {% endif %}
+                </div>
+            </nav>
+            {% endif %}
+        </section>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

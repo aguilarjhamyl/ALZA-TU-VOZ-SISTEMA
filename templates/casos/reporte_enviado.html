@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load catalogo %}
+
+{% block title %}Reporte enviado | Alza Tu Voz{% endblock %}
+
+{% block content %}
+<section class="workflow-page">
+    <div class="container workflow-container workflow-container--narrow">
+        <div class="workflow-empty-card report-success-card">
+            <span class="workflow-empty-card__icon report-success-card__icon">
+                <i class="bi bi-check2-circle" aria-hidden="true"></i>
+            </span>
+            <span class="eyebrow">REPORTE REGISTRADO</span>
+            <h1>Tu reporte fue enviado</h1>
+            <p>
+                El caso <strong>{{ caso.codigo_caso }}</strong> quedó registrado
+                para revisión institucional. Puedes consultar sus actualizaciones
+                desde tu cuenta.
+            </p>
+            <span class="case-status" {% if caso.id_estado_caso.color_hex %}style="--case-status-color: {{ caso.id_estado_caso.color_hex }}"{% endif %}>
+                {{ caso.id_estado_caso.nombre|catalogo }}
+            </span>
+            {% if mostrar_chatbot %}
+                <div class="report-success-support">
+                    <h2>¿Necesitas conversar o buscar orientación?</h2>
+                    <p>
+                        Puedes usar este prototipo de respuestas guiadas como
+                        apoyo complementario después de reportar. No utiliza IA
+                        generativa, no diagnostica ni reemplaza la atención de
+                        una persona adulta o profesional.
+                    </p>
+                    <a class="btn btn--primary btn-primary" href="{% url 'casos:chatbot' %}">
+                        <i class="bi bi-chat-heart" aria-hidden="true"></i>
+                        Abrir chatbot de apoyo
+                    </a>
+                </div>
+            {% endif %}
+            <div class="report-success-actions">
+                <a class="btn btn--secondary btn-outline-secondary" href="{% url 'casos:detalle' caso.id_caso %}">
+                    Ver seguimiento del caso
+                </a>
+                <a class="workflow-text-link" href="{% url 'casos:crear' %}">
+                    Registrar otra situación
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

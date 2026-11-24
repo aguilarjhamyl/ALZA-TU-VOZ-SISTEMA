@@ -1,0 +1,35 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}Consultar · {{ tabla_titulo }} | Alza Tu Voz{% endblock %}
+
+{% block content %}
+<section class="admin-dashboard admin-table-page">
+    <div class="admin-dashboard__container">
+        <nav class="admin-table-breadcrumb" aria-label="Ruta de navegación">
+            <a href="{% url 'dashboard:inicio' %}"><i class="bi bi-grid-1x2" aria-hidden="true"></i> Panel</a>
+            <i class="bi bi-chevron-right" aria-hidden="true"></i>
+            <a href="{% url 'dashboard:tabla' tabla_slug %}">{{ tabla_titulo }}</a>
+            <i class="bi bi-chevron-right" aria-hidden="true"></i>
+            <span>Consulta</span>
+        </nav>
+        <header class="admin-table-heading">
+            <div>
+                <span class="admin-dashboard__eyebrow">REGISTRO DE SOLO LECTURA</span>
+                <h1>Detalle del registro</h1>
+                <p>{{ tabla_titulo }}</p>
+            </div>
+            <a class="admin-icon-btn admin-icon-btn--gray" href="{% url 'dashboard:tabla' tabla_slug %}"
+               title="Volver a la tabla" aria-label="Volver a la tabla">
+                <i class="bi bi-arrow-left" aria-hidden="true"></i>
+            </a>
+        </header>
+        <section class="admin-panel admin-record-detail">
+            <dl>
+                {% for etiqueta, valor in detalle_campos %}
+                <div><dt>{{ etiqueta|capfirst }}</dt><dd>{{ valor }}</dd></div>
+                {% endfor %}
+            </dl>
+        </section>
+    </div>
+</section>
+{% endblock %}

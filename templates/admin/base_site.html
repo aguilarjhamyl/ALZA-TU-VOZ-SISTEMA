@@ -1,0 +1,15 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | Alza TU Voz{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+    <a href="{% url 'dashboard:inicio' %}">Alza TU Voz <span>Administración</span></a>
+</div>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/admin-dark.css' %}?v=20261105-2">
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load catalogo %}
+
+{% block title %}Actividades de bienestar | Alza Tu Voz{% endblock %}
+
+{% block content %}
+<section class="workflow-page">
+    <div class="container workflow-container">
+        <div class="workflow-heading">
+            <span class="eyebrow">ACTIVIDADES DE AUTOCONOCIMIENTO</span>
+            <h1>Herramientas de bienestar</h1>
+            <p>Estas actividades son orientativas. No realizan diagnósticos ni sustituyen una conversación con un profesional.</p>
+        </div>
+        <div class="workflow-notice"><i class="bi bi-heart-pulse" aria-hidden="true"></i><p>Si una pregunta te incomoda, puedes detenerte y hablar con una persona adulta de confianza o con el equipo de apoyo.</p></div>
+        <article class="workflow-card mb-4">
+            <span class="eyebrow">PAUSA VOLUNTARIA</span>
+            <h2>Plataforma de calma</h2>
+            <p>Acompaña tu respiración con un pulso visual. Puedes detenerte en cualquier momento.</p>
+            <a class="btn btn--primary btn-primary" href="{% url 'casos:bienestar_calma' %}">Probar respiración guiada <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+        </article>
+        {% if tests %}
+            <div class="row g-4">
+                {% for test in tests %}
+                    <article class="col-md-6">
+                        <div class="workflow-card h-100">
+                            <span class="eyebrow">{% if test.formato == "DIBUJO" %}ACTIVIDAD CREATIVA{% else %}CUESTIONARIO{% endif %}</span>
+                            <h2>{{ test.nombre|catalogo }}</h2>
+                            <p>{{ test.descripcion|default:test.nota_uso|default:"Actividad de autoconocimiento y bienestar."|catalogo }}</p>
+                            {% if test.nota_uso %}<p class="form-text">{{ test.nota_uso|catalogo }}</p>{% endif %}
+                            <a class="btn btn--primary btn-primary" href="{% url 'casos:aplicar_test' test.id_test %}">Comenzar actividad <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="workflow-empty-card"><span class="workflow-empty-card__icon"><i class="bi bi-clipboard-heart" aria-hidden="true"></i></span><h2>No hay actividades disponibles</h2><p>Vuelve a consultar más adelante o conversa con el equipo de apoyo.</p></div>
+        {% endif %}
+
+        {% if aplicaciones %}
+            <div class="workflow-section-heading"><div><span class="eyebrow">TUS REGISTROS</span><h2>Actividades realizadas</h2></div></div>
+            <div class="workflow-list">
+                {% for aplicacion in aplicaciones %}
+                    <article class="workflow-list-card">
+                        <div class="workflow-list-card__main"><h3>{{ aplicacion.id_test.nombre|catalogo }}</h3><p>Realizada el {{ aplicacion.finalizada_en|date:"d/m/Y H:i" }}</p></div>
+                        <a class="workflow-text-link" href="{% url 'casos:resultado_test' aplicacion.id_aplicacion %}">Ver resultado <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                    </article>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

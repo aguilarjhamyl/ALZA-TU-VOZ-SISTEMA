@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Orientación conversacional | Alza Tu Voz{% endblock %}
+
+{% block content %}
+<section class="workflow-page">
+    <div class="container workflow-container">
+        <div class="workflow-heading workflow-heading--row">
+            <div>
+                <span class="eyebrow">ORIENTACIÓN Y ESCUCHA</span>
+                <h1>¿Qué te gustaría conversar?</h1>
+                <p>Este prototipo responde con mensajes guiados; no utiliza inteligencia artificial ni sustituye la ayuda profesional.</p>
+            </div>
+            {% if puede_iniciar_conversacion %}
+                <form method="post" action="{% url 'casos:nueva_conversacion' %}">
+                    {% csrf_token %}
+                    <button class="btn btn--primary btn-primary" type="submit"><i class="bi bi-chat-heart" aria-hidden="true"></i> Iniciar conversación</button>
+                </form>
+            {% else %}
+                <p class="workflow-empty">Alcanzaste el límite de {{ limite_conversaciones_diarias }} conversaciones nuevas por hoy.</p>
+            {% endif %}
+        </div>
+
+        <div class="workflow-notice">
+            <i class="bi bi-shield-exclamation" aria-hidden="true"></i>
+            <p>Comparte solo lo que te resulte cómodo. No incluyas nombres completos ni datos de contacto. Si hay peligro inmediato, busca apoyo presencial ahora.</p>
+        </div>
+
+        <div class="workflow-section-heading">
+            <div><span class="eyebrow">HISTORIAL PERSONAL</span><h2>Tus conversaciones</h2></div>
+        </div>
+        {% if conversaciones %}
+            <div class="workflow-list">
+                {% for conversacion in conversaciones %}
+                    <article class="workflow-list-card">
+                        <div class="workflow-list-card__main">
+                            <span class="case-code">Conversación {{ conversacion.id_conversacion }}</span>
+                            <p>Iniciada el {{ conversacion.iniciada_en|date:"d/m/Y H:i" }}</p>
+                        </div>
+                        <a class="workflow-text-link" href="{% url 'casos:conversacion_chatbot' conversacion.id_conversacion %}">Abrir <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="workflow-empty-card"><span class="workflow-empty-card__icon"><i class="bi bi-chat-square-heart" aria-hidden="true"></i></span><h2>Aún no tienes conversaciones</h2><p>Al iniciar una, podrás volver a ella desde este espacio.</p></div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}{% if edicion %}Editar reporte{% else %}Reportar una situación{% endif %} | Alza Tu Voz{% endblock %}
+
+{% block content %}
+<section class="workflow-page">
+    <div class="container workflow-container">
+        <div class="workflow-heading">
+            <a class="workflow-back" href="{% url 'inicio' %}">
+                <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver al inicio
+            </a>
+            <span class="eyebrow">{% if edicion %}ACTUALIZACIÓN CONFIDENCIAL{% else %}REPORTE CONFIDENCIAL{% endif %}</span>
+            <h1>{% if edicion %}Actualiza tu reporte{% else %}Cuéntanos qué está ocurriendo{% endif %}</h1>
+            <p>{% if edicion %}Puedes actualizar el reporte y sus evidencias dentro del plazo permitido. Los cambios se guardarán en el historial y se notificarán a Dirección.{% else %}Este reporte quedará asociado a tu cuenta. Completa la información que conoces; los campos con * son obligatorios.{% endif %}</p>
+        </div>
+
+        <div class="row g-4 align-items-start">
+            <div class="col-lg-8">
+                <form method="post" enctype="multipart/form-data" class="workflow-card">
+                    {% csrf_token %}
+                    {% if form.errors or respuestas.errors or participantes.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            Revisa los campos señalados. No se envió el reporte.
+                        </div>
+                    {% endif %}
+
+                    <section class="workflow-section">
+                        <div class="workflow-section__heading">
+                            <span class="workflow-step">1</span>
+                            <div>
+                                <h2>Información de la situación</h2>
+                                <p>Describe los hechos con tus propias palabras, sin incluir información que no sea necesaria.</p>
+                            </div>
+                        </div>
+                        {% include "includes/form_fields.html" with form=form %}
+                    </section>
+
+                    <section class="workflow-section" id="preguntas">
+                        <div class="workflow-section__heading">
+                            <span class="workflow-step">2</span>
+                            <div>
+                                <h2>Preguntas complementarias</h2>
+                                <p>Estas preguntas pueden variar según el tipo de situación seleccionado.</p>
+                            </div>
+                        </div>
+                        {% if respuestas.fields %}
+                            {% include "includes/form_fields.html" with form=respuestas %}
+                        {% else %}
+                            <p class="workflow-empty">No hay preguntas adicionales para esta selección.</p>
+                        {% endif %}
+                    </section>
+
+                    <section class="workflow-section">
+                        <div class="workflow-section__heading">
+                            <span class="workflow-step">3</span>
+                            <div>
+                                <h2>Personas relacionadas</h2>
+                                <p>Agrega solo las personas necesarias. Esta información será tratada con reserva.</p>
+                            </div>
+                        </div>
+                        {{ participantes.management_form }}
+                        {% for participante in participantes %}
+                            <div class="workflow-repeat">
+                                <h3>Persona {{ forloop.counter }}</h3>
+                                {% include "includes/form_fields.html" with form=participante %}
+                            </div>
+                        {% endfor %}
+                        {% for error in participantes.non_form_errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </section>
+
+                    <div class="workflow-actions">
+                        <button class="btn btn--primary btn-primary" type="submit">
+                            <i class="bi {% if edicion %}bi-save{% else %}bi-send{% endif %}" aria-hidden="true"></i> {% if edicion %}Guardar cambios{% else %}Enviar reporte{% endif %}
+                        </button>
+                        <span><i class="bi bi-lock" aria-hidden="true"></i> La información solo será visible para personal autorizado.</span>
+                    </div>
+                </form>
+            </div>
+
+            <aside class="col-lg-4">
+                <div class="workflow-aside">
+                    <div class="workflow-aside__icon"><i class="bi bi-shield-lock" aria-hidden="true"></i></div>
+                    <h2>{% if edicion %}Sobre los cambios{% else %}Antes de enviar{% endif %}</h2>
+                    <ul>
+                        {% if edicion %}
+                            <li>El sistema conserva el historial anterior para auditoría.</li>
+                            <li>Las evidencias de tests no pueden quitarse desde aquí.</li>
+                            <li>Los cambios se notifican nuevamente a Dirección.</li>
+                        {% else %}
+                            <li>Si existe peligro inmediato, busca ayuda presencial de una persona adulta de confianza o de los servicios locales de emergencia.</li>
+                            <li>Este sistema registra y organiza reportes; no reemplaza la atención profesional.</li>
+                            <li>El reporte quedará asociado a tu cuenta y podrás consultar su seguimiento en “Mis reportes”.</li>
+                            <li>Los archivos adjuntos pueden incluir imágenes, audio, video o documentos de hasta 25 MB cada uno.</li>
+                        {% endif %}
+                    </ul>
+                    {% if not edicion %}<p class="workflow-privacy-note">
+                        Si eres estudiante, después de enviar el reporte podrás
+                        abrir el chatbot de apoyo complementario.
+                    </p>{% endif %}
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tipo = document.getElementById("id_id_tipo_incidente");
+        if (!tipo) return;
+        tipo.addEventListener("change", function () {
+            const url = new URL(window.location.href);
+            if (tipo.value) url.searchParams.set("tipo", tipo.value);
+            else url.searchParams.delete("tipo");
+            url.hash = "preguntas";
+            window.location.assign(url);
+        });
+    });
+</script>
+{% endblock %}

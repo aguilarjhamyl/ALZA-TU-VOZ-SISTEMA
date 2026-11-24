@@ -1,0 +1,1071 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Biblioteca de botones CRUD</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+/* CONFIGURACION GENERAL */
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f6fa;
+    padding: 25px;
+}
+
+h3 {
+    color: #333;
+    margin-top: 25px;
+    margin-bottom: 15px;
+}
+
+.grupo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+/* BOTON CIRCULAR GENERAL */
+.btn-icon {
+    width: 42px;
+    height: 42px;
+    border: 2px solid;
+    border-radius: 50%;
+    background: transparent;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+/* EFECTO GENERAL */
+.btn-icon:hover {
+    transform: translateY(-2px);
+}
+
+.btn-icon:active {
+    transform: scale(0.90);
+}
+
+.btn-icon:focus-visible {
+    outline: 3px solid #adb5bd;
+    outline-offset: 3px;
+}
+
+/* COLORES */
+
+/* AZUL */
+.azul {
+    color: #0d6efd;
+    border-color: #0d6efd;
+}
+.azul:hover {
+    background: #0d6efd;
+    color: white;
+}
+
+/* VERDE */
+.verde {
+    color: #198754;
+    border-color: #198754;
+}
+.verde:hover {
+    background: #198754;
+    color: white;
+}
+
+/* AMARILLO */
+.amarillo {
+    color: #d39e00;
+    border-color: #d39e00;
+}
+.amarillo:hover {
+    background: #ffc107;
+    color: black;
+}
+
+/* ROJO */
+.rojo {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+.rojo:hover {
+    background: #dc3545;
+    color: white;
+}
+
+/* CELESTE */
+.celeste {
+    color: #0aa2c0;
+    border-color: #0aa2c0;
+}
+.celeste:hover {
+    background: #0dcaf0;
+    color: black;
+}
+
+/* MORADO */
+.morado {
+    color: #7952b3;
+    border-color: #7952b3;
+}
+.morado:hover {
+    background: #7952b3;
+    color: white;
+}
+
+/* NARANJA */
+.naranja {
+    color: #fd7e14;
+    border-color: #fd7e14;
+}
+.naranja:hover {
+    background: #fd7e14;
+    color: black;
+}
+
+/* TURQUESA */
+.turquesa {
+    color: #20a88a;
+    border-color: #20a88a;
+}
+.turquesa:hover {
+    background: #20c997;
+    color: black;
+}
+
+/* GRIS */
+.gris {
+    color: #6c757d;
+    border-color: #6c757d;
+}
+.gris:hover {
+    background: #6c757d;
+    color: white;
+}
+
+/* ROSADO */
+.rosado {
+    color: #e83e8c;
+    border-color: #e83e8c;
+}
+.rosado:hover {
+    background: #e83e8c;
+    color: white;
+}
+
+/* OSCURO */
+.oscuro {
+    color: #343a40;
+    border-color: #343a40;
+}
+.oscuro:hover {
+    background: #343a40;
+    color: white;
+}
+
+</style>
+</head>
+
+<body>
+
+<h2>Biblioteca de botones del sistema</h2>
+
+<!-- 1. CRUD -->
+<h3>1. Operaciones CRUD</h3>
+<div class="grupo">
+
+<button class="btn-icon verde" title="Agregar">
+<i class="fas fa-plus"></i></button>
+
+<button class="btn-icon azul" title="Consultar">
+<i class="fas fa-eye"></i></button>
+
+<button class="btn-icon amarillo" title="Editar">
+<i class="fas fa-pen"></i></button>
+
+<button class="btn-icon rojo" title="Eliminar">
+<i class="fas fa-trash"></i></button>
+
+<button class="btn-icon verde" title="Guardar">
+<i class="fas fa-floppy-disk"></i></button>
+
+<button class="btn-icon gris" title="Cancelar">
+<i class="fas fa-xmark"></i></button>
+
+<button class="btn-icon celeste" title="Buscar">
+<i class="fas fa-magnifying-glass"></i></button>
+
+<button class="btn-icon morado" title="Duplicar">
+<i class="fas fa-copy"></i></button>
+
+<button class="btn-icon naranja" title="Limpiar">
+<i class="fas fa-eraser"></i></button>
+
+<button class="btn-icon oscuro" title="Restablecer">
+<i class="fas fa-rotate-left"></i></button>
+
+</div>
+
+
+<!-- 2. ESTADOS -->
+<h3>2. Gestión de estados</h3>
+<div class="grupo">
+
+<button class="btn-icon verde" title="Habilitar">
+<i class="fas fa-toggle-on"></i></button>
+
+<button class="btn-icon rojo" title="Inhabilitar">
+<i class="fas fa-toggle-off"></i></button>
+
+<button class="btn-icon verde" title="Activar">
+<i class="fas fa-check-circle"></i></button>
+
+<button class="btn-icon gris" title="Desactivar">
+<i class="fas fa-circle-minus"></i></button>
+
+<button class="btn-icon azul" title="Aprobar">
+<i class="fas fa-check"></i></button>
+
+<button class="btn-icon rojo" title="Rechazar">
+<i class="fas fa-ban"></i></button>
+
+<button class="btn-icon amarillo" title="Pendiente">
+<i class="fas fa-clock"></i></button>
+
+<button class="btn-icon naranja" title="Suspender">
+<i class="fas fa-pause-circle"></i></button>
+
+<button class="btn-icon verde" title="Reanudar">
+<i class="fas fa-play-circle"></i></button>
+
+<button class="btn-icon morado" title="Finalizar">
+<i class="fas fa-flag-checkered"></i></button>
+
+</div>
+
+
+<!-- 3. LOGS Y BITACORA -->
+<h3>3. Logs, auditoría y bitácora</h3>
+<div class="grupo">
+
+<button class="btn-icon azul" title="Logs del sistema">
+<i class="fas fa-file-lines"></i></button>
+
+<button class="btn-icon morado" title="Bitácora">
+<i class="fas fa-book"></i></button>
+
+<button class="btn-icon celeste" title="Historial">
+<i class="fas fa-clock-rotate-left"></i></button>
+
+<button class="btn-icon naranja" title="Actividad">
+<i class="fas fa-chart-line"></i></button>
+
+<button class="btn-icon turquesa" title="Auditoría">
+<i class="fas fa-clipboard-check"></i></button>
+
+<button class="btn-icon oscuro" title="Seguimiento">
+<i class="fas fa-list-check"></i></button>
+
+<button class="btn-icon amarillo" title="Movimientos">
+<i class="fas fa-arrows-rotate"></i></button>
+
+<button class="btn-icon rojo" title="Incidencias">
+<i class="fas fa-triangle-exclamation"></i></button>
+
+<button class="btn-icon verde" title="Ver registro">
+<i class="fas fa-list"></i></button>
+
+<button class="btn-icon gris" title="Limpiar registros">
+<i class="fas fa-broom"></i></button>
+
+<button class="btn-icon azul" title="Detalles de auditoría">
+<i class="fas fa-magnifying-glass-chart"></i></button>
+
+<button class="btn-icon naranja" title="Eventos">
+<i class="fas fa-bell"></i></button>
+
+</div>
+
+
+<!-- 4. ARCHIVOS -->
+<h3>4. Archivos y documentos</h3>
+<div class="grupo">
+
+<button class="btn-icon azul" title="Adjuntar">
+<i class="fas fa-paperclip"></i></button>
+
+<button class="btn-icon verde" title="Subir archivo">
+<i class="fas fa-upload"></i></button>
+
+<button class="btn-icon celeste" title="Descargar">
+<i class="fas fa-download"></i></button>
+
+<button class="btn-icon morado" title="Exportar">
+<i class="fas fa-file-export"></i></button>
+
+<button class="btn-icon naranja" title="Importar">
+<i class="fas fa-file-import"></i></button>
+
+<button class="btn-icon oscuro" title="Imprimir">
+<i class="fas fa-print"></i></button>
+
+<button class="btn-icon rojo" title="Eliminar archivo">
+<i class="fas fa-file-circle-xmark"></i></button>
+
+<button class="btn-icon azul" title="Ver documento">
+<i class="fas fa-file-pdf"></i></button>
+
+<button class="btn-icon amarillo" title="Carpeta">
+<i class="fas fa-folder-open"></i></button>
+
+<button class="btn-icon verde" title="Guardar documento">
+<i class="fas fa-file-circle-check"></i></button>
+
+</div>
+
+
+<!-- 5. USUARIOS Y SEGURIDAD -->
+<h3>5. Usuarios, roles y seguridad</h3>
+<div class="grupo">
+
+<button class="btn-icon azul" title="Usuarios">
+<i class="fas fa-user"></i></button>
+
+<button class="btn-icon morado" title="Roles">
+<i class="fas fa-users"></i></button>
+
+<button class="btn-icon celeste" title="Permisos">
+<i class="fas fa-user-shield"></i></button>
+
+<button class="btn-icon verde" title="Acceso permitido">
+<i class="fas fa-lock-open"></i></button>
+
+<button class="btn-icon rojo" title="Bloquear acceso">
+<i class="fas fa-lock"></i></button>
+
+<button class="btn-icon naranja" title="Cambiar contraseña">
+<i class="fas fa-key"></i></button>
+
+<button class="btn-icon oscuro" title="Sesiones">
+<i class="fas fa-desktop"></i></button>
+
+<button class="btn-icon rosado" title="Perfil">
+<i class="fas fa-id-card"></i></button>
+
+<button class="btn-icon gris" title="Cerrar sesión">
+<i class="fas fa-right-from-bracket"></i></button>
+
+<button class="btn-icon azul" title="Iniciar sesión">
+<i class="fas fa-right-to-bracket"></i></button>
+
+</div>
+
+
+<!-- 6. SISTEMA Y CONFIGURACION -->
+<h3>6. Sistema y configuración</h3>
+<div class="grupo">
+
+<button class="btn-icon oscuro" title="Configuración">
+<i class="fas fa-gear"></i></button>
+
+<button class="btn-icon azul" title="Actualizar">
+<i class="fas fa-rotate"></i></button>
+
+<button class="btn-icon celeste" title="Sincronizar">
+<i class="fas fa-arrows-rotate"></i></button>
+
+<button class="btn-icon morado" title="Base de datos">
+<i class="fas fa-database"></i></button>
+
+<button class="btn-icon verde" title="Conexión">
+<i class="fas fa-wifi"></i></button>
+
+<button class="btn-icon rojo" title="Desconectar">
+<i class="fas fa-plug-circle-xmark"></i></button>
+
+<button class="btn-icon naranja" title="Notificaciones">
+<i class="fas fa-bell"></i></button>
+
+<button class="btn-icon amarillo" title="Información">
+<i class="fas fa-circle-info"></i></button>
+
+<button class="btn-icon gris" title="Ayuda">
+<i class="fas fa-circle-question"></i></button>
+
+<button class="btn-icon turquesa" title="Panel de control">
+<i class="fas fa-gauge-high"></i></button>
+
+</div>
+
+
+<!-- 7. NAVEGACION -->
+<h3>7. Navegación y acciones adicionales</h3>
+<div class="grupo">
+
+<button class="btn-icon azul" title="Volver">
+<i class="fas fa-arrow-left"></i></button>
+
+<button class="btn-icon azul" title="Avanzar">
+<i class="fas fa-arrow-right"></i></button>
+
+<button class="btn-icon celeste" title="Inicio">
+<i class="fas fa-house"></i></button>
+
+<button class="btn-icon morado" title="Menú">
+<i class="fas fa-bars"></i></button>
+
+<button class="btn-icon naranja" title="Compartir">
+<i class="fas fa-share-nodes"></i></button>
+
+<button class="btn-icon rosado" title="Favoritos">
+<i class="fas fa-star"></i></button>
+
+<button class="btn-icon rojo" title="Eliminar definitivamente">
+<i class="fas fa-trash-can"></i></button>
+
+<button class="btn-icon verde" title="Confirmar">
+<i class="fas fa-circle-check"></i></button>
+
+<button class="btn-icon gris" title="Más opciones">
+<i class="fas fa-ellipsis"></i></button>
+
+<button class="btn-icon oscuro" title="Herramientas">
+<i class="fas fa-wrench"></i></button>
+
+</div>
+
+
+<!-- =================================== -->
+<!-- 8. DASHBOARD Y PANEL DE CONTROL -->
+<!-- =================================== -->
+<h3>8. Dashboard y panel de control</h3>
+<div class="grupo">
+
+<button class="btn-icon azul" title="Dashboard">
+<i class="fas fa-gauge-high"></i></button>
+
+<button class="btn-icon celeste" title="Resumen general">
+<i class="fas fa-chart-pie"></i></button>
+
+<button class="btn-icon morado" title="Estadísticas">
+<i class="fas fa-chart-column"></i></button>
+
+<button class="btn-icon verde" title="Indicadores KPI">
+<i class="fas fa-bullseye"></i></button>
+
+<button class="btn-icon naranja" title="Tendencia positiva">
+<i class="fas fa-arrow-trend-up"></i></button>
+
+<button class="btn-icon rojo" title="Tendencia negativa">
+<i class="fas fa-arrow-trend-down"></i></button>
+
+<button class="btn-icon azul" title="Gráficos">
+<i class="fas fa-chart-area"></i></button>
+
+<button class="btn-icon amarillo" title="Objetivos">
+<i class="fas fa-crosshairs"></i></button>
+
+<button class="btn-icon turquesa" title="Comparativas">
+<i class="fas fa-chart-line"></i></button>
+
+<button class="btn-icon oscuro" title="Pantalla completa">
+<i class="fas fa-expand"></i></button>
+
+<button class="btn-icon gris" title="Contraer panel">
+<i class="fas fa-compress"></i></button>
+
+<button class="btn-icon celeste" title="Filtros">
+<i class="fas fa-filter"></i></button>
+
+</div>
+
+
+<!-- =================================== -->
+<!-- 9. REPORTES -->
+<!-- =================================== -->
+<h3>9. Reportes y documentos</h3>
+<div class="grupo">
+
+<button class="btn-icon azul" title="Reportes">
+<i class="fas fa-file-lines"></i></button>
+
+<button class="btn-icon rojo" title="Reporte PDF">
+<i class="fas fa-file-pdf"></i></button>
+
+<button class="btn-icon verde" title="Reporte Excel">
+<i class="fas fa-file-excel"></i></button>
+
+<button class="btn-icon azul" title="Reporte Word">
+<i class="fas fa-file-word"></i></button>
+
+<button class="btn-icon morado" title="Reporte general">
+<i class="fas fa-file-alt"></i></button>
+
+<button class="btn-icon naranja" title="Generar reporte">
+<i class="fas fa-file-circle-plus"></i></button>
+
+<button class="btn-icon celeste" title="Vista previa">
+<i class="fas fa-file-image"></i></button>
+
+<button class="btn-icon amarillo" title="Programar reporte">
+<i class="fas fa-calendar-check"></i></button>
+
+<button class="btn-icon oscuro" title="Enviar reporte">
+<i class="fas fa-paper-plane"></i></button>
+
+<button class="btn-icon turquesa" title="Compartir reporte">
+<i class="fas fa-share-nodes"></i></button>
+
+<button class="btn-icon gris" title="Historial de reportes">
+<i class="fas fa-clock-rotate-left"></i></button>
+
+<button class="btn-icon rojo" title="Eliminar reporte">
+<i class="fas fa-file-circle-xmark"></i></button>
+
+</div>
+
+
+<!-- =================================== -->
+<!-- 10. CALENDARIO Y TIEMPO -->
+<!-- =================================== -->
+<h3>10. Calendario, fechas y programación</h3>
+<div class="grupo">
+
+<button class="btn-icon azul" title="Calendario">
+<i class="fas fa-calendar-days"></i></button>
+
+<button class="btn-icon verde" title="Nuevo evento">
+<i class="fas fa-calendar-plus"></i></button>
+
+<button class="btn-icon rojo" title="Cancelar evento">
+<i class="fas fa-calendar-xmark"></i></button>
+
+<button class="btn-icon amarillo" title="Recordatorios">
+<i class="fas fa-bell"></i></button>
+
+<button class="btn-icon celeste" title="Agenda">
+<i class="fas fa-calendar-week"></i></button>
+
+<button class="btn-icon morado" title="Cronograma">
+<i class="fas fa-timeline"></i></button>
+
+<button class="btn-icon naranja" title="Programar">
+<i class="fas fa-clock"></i></button>
+
+<button class="btn-icon turquesa" title="Temporizador">
+<i class="fas fa-stopwatch"></i></button>
+
+<button class="btn-icon gris" title="Repetir evento">
+<i class="fas fa-repeat"></i></button>
+
+<button class="btn-icon azul" title="Fecha actual">
+<i class="fas fa-calendar-day"></i></button>
+
+</div>
+
+
+<!-- =================================== -->
+<!-- 11. VENTAS Y COMERCIAL -->
+<!-- =================================== -->
+<h3>11. Ventas y comercialización</h3>
+<div class="grupo">
+
+<button class="btn-icon verde" title="Nueva venta">
+<i class="fas fa-cart-plus"></i></button>
+
+<button class="btn-icon azul" title="Ventas">
+<i class="fas fa-cart-shopping"></i></button>
+
+<button class="btn-icon celeste" title="Cotizaciones">
+<i class="fas fa-file-invoice"></i></button>
+
+<button class="btn-icon amarillo" title="Descuentos">
+<i class="fas fa-percent"></i></button>
+
+<button class="btn-icon morado" title="Promociones">
+<i class="fas fa-tags"></i></button>
+
+<button class="btn-icon naranja" title="Pedidos">
+<i class="fas fa-basket-shopping"></i></button>
+
+<button class="btn-icon verde" title="Confirmar pedido">
+<i class="fas fa-clipboard-check"></i></button>
+
+<button class="btn-icon rojo" title="Anular venta">
+<i class="fas fa-ban"></i></button>
+
+<button class="btn-icon azul" title="Clientes">
+<i class="fas fa-user-group"></i></button>
+
+<button class="btn-icon turquesa" title="Punto de venta">
+<i class="fas fa-cash-register"></i></button>
+
+<button class="btn-icon oscuro" title="Comprobantes">
+<i class="fas fa-receipt"></i></button>
+
+<button class="btn-icon rosado" title="Fidelización">
+<i class="fas fa-heart"></i></button>
+
+</div>
+
+
+<!-- =================================== -->
+<!-- 12. COMPRAS Y PROVEEDORES -->
+<!-- =================================== -->
+<h3>12. Compras y proveedores</h3>
+<div class="grupo">
+
+<button class="btn-icon verde" title="Nueva compra">
+<i class="fas fa-bag-shopping"></i></button>
+
+<button class="btn-icon azul" title="Proveedores">
+<i class="fas fa-truck-field"></i></button>
+
+<button class="btn-icon celeste" title="Orden de compra">
+<i class="fas fa-file-circle-plus"></i></button>
+
+<button class="btn-icon amarillo" title="Recepción de compra">
+<i class="fas fa-box-open"></i></button>
+
+<button class="btn-icon morado" title="Evaluar proveedor">
+<i class="fas fa-star"></i></button>
+
+<button class="btn-icon naranja" title="Seguimiento de compra">
+<i class="fas fa-truck-fast"></i></button>
+
+<button class="btn-icon rojo" title="Anular compra">
+<i class="fas fa-circle-xmark"></i></button>
+
+<button class="btn-icon turquesa" title="Devoluciones">
+<i class="fas fa-arrow-rotate-left"></i></button>
+
+<button class="btn-icon oscuro" title="Facturas de compra">
+<i class="fas fa-file-invoice-dollar"></i></button>
+
+<button class="btn-icon gris" title="Comparar proveedores">
+<i class="fas fa-scale-balanced"></i></button>
+
+</div>
+
+
+<!-- =================================== -->
+<!-- 13. INVENTARIO Y ALMACEN -->
+<!-- =================================== -->
+<h3>13. Inventario, productos y almacenes</h3>
+<div class="grupo">
+
+<button class="btn-icon verde" title="Nuevo producto">
+<i class="fas fa-box"></i></button>
+
+<button class="btn-icon azul" title="Productos">
+<i class="fas fa-boxes-stacked"></i></button>
+
+<button class="btn-icon celeste" title="Almacenes">
+<i class="fas fa-warehouse"></i></button>
+
+<button class="btn-icon amarillo" title="Stock">
+<i class="fas fa-cubes-stacked"></i></button>
+
+<button class="btn-icon rojo" title="Stock bajo">
+<i class="fas fa-box-open"></i></button>
+
+<button class="btn-icon naranja" title="Transferir productos">
+<i class="fas fa-dolly"></i></button>
+
+<button class="btn-icon morado" title="Categorías">
+<i class="fas fa-layer-group"></i></button>
+
+<button class="btn-icon turquesa" title="Código de barras">
+<i class="fas fa-barcode"></i></button>
+
+<button class="btn-icon azul" title="Código QR">
+<i class="fas fa-qrcode"></i></button>
+
+<button class="btn-icon verde" title="Entrada de almacén">
+<i class="fas fa-arrow-right-to-bracket"></i></button>
+
+<button class="btn-icon rojo" title="Salida de almacén">
+<i class="fas fa-arrow-right-from-bracket"></i></button>
+
+<button class="btn-icon gris" title="Ajuste de inventario">
+<i class="fas fa-sliders"></i></button>
+
+<button class="btn-icon oscuro" title="Kardex">
+<i class="fas fa-list-ol"></i></button>
+
+<button class="btn-icon amarillo" title="Vencimientos">
+<i class="fas fa-hourglass-end"></i></button>
+
+</div>
+
+
+<!-- =================================== -->
+<!-- 14. FINANZAS Y CONTABILIDAD -->
+<!-- =================================== -->
+<h3>14. Finanzas y contabilidad</h3>
+<div class="grupo">
+
+<button class="btn-icon verde" title="Ingresos">
+<i class="fas fa-money-bill-trend-up"></i></button>
+
+<button class="btn-icon rojo" title="Egresos">
+<i class="fas fa-money-bill-transfer"></i></button>
+
+<button class="btn-icon azul" title="Caja">
+<i class="fas fa-cash-register"></i></button>
+
+<button class="btn-icon morado" title="Cuentas">
+<i class="fas fa-wallet"></i></button>
+
+<button class="btn-icon celeste" title="Transferencias">
+<i class="fas fa-money-bill-transfer"></i></button>
+
+<button class="btn-icon naranja" title="Pagos">
+<i class="fas fa-credit-card"></i></button>
+
+<button class="btn-icon amarillo" title="Deudas">
+<i class="fas fa-hand-holding-dollar"></i></button>
+
+<button class="btn-icon verde" title="Cobros">
+<i class="fas fa-hand-holding-dollar"></i></button>
+
+<button class="btn-icon oscuro" title="Balance general">
+<i class="fas fa-scale-balanced"></i></button>
+
+<button class="btn-icon azul" title="Presupuesto">
+<i class="fas fa-calculator"></i></button>
+
+<button class="btn-icon turquesa" title="Conciliación">
+<i class="fas fa-money-check-dollar"></i></button>
+
+<button class="btn-icon rosado" title="Facturación">
+<i class="fas fa-file-invoice-dollar"></i></button>
+
+<button class="btn-icon gris" title="Monedas">
+<i class="fas fa-coins"></i></button>
+
+<button class="btn-icon rojo" title="Cuentas vencidas">
+<i class="fas fa-calendar-times"></i></button>
+
+</div>
+
+
+<!-- =================================== -->
+<!-- 15. RECURSOS HUMANOS -->
+<!-- =================================== -->
+<h3>15. Recursos humanos y personal</h3>
+<div class="grupo">
+
+<button class="btn-icon azul" title="Personal">
+<i class="fas fa-users"></i></button>
+
+<button class="btn-icon verde" title="Nuevo empleado">
+<i class="fas fa-user-plus"></i></button>
+
+<button class="btn-icon rojo" title="Retirar empleado">
+<i class="fas fa-user-minus"></i></button>
+
+<button class="btn-icon celeste" title="Asistencia">
+<i class="fas fa-user-check"></i></button>
+
+<button class="btn-icon amarillo" title="Marcación">
+<i class="fas fa-fingerprint"></i></button>
+
+<button class="btn-icon morado" title="Nómina">
+<i class="fas fa-money-check-alt"></i></button>
+
+<button class="btn-icon naranja" title="Vacaciones">
+<i class="fas fa-umbrella-beach"></i></button>
+
+<button class="btn-icon turquesa" title="Evaluación de personal">
+<i class="fas fa-clipboard-user"></i></button>
+
+<button class="btn-icon oscuro" title="Contratos">
+<i class="fas fa-file-signature"></i></button>
+
+<button class="btn-icon gris" title="Cargos">
+<i class="fas fa-id-badge"></i></button>
+
+<button class="btn-icon rosado" title="Perfil del empleado">
+<i class="fas fa-address-card"></i></button>
+
+<button class="btn-icon azul" title="Organigrama">
+<i class="fas fa-sitemap"></i></button>
+
+</div>
+
+
+<!-- =================================== -->
+<!-- 16. COMUNICACION -->
+<!-- =================================== -->
+<h3>16. Comunicación y mensajería</h3>
+<div class="grupo">
+
+<button class="btn-icon azul" title="Mensajes">
+<i class="fas fa-envelope"></i></button>
+
+<button class="btn-icon verde" title="Nuevo mensaje">
+<i class="fas fa-envelope-open-text"></i></button>
+
+<button class="btn-icon celeste" title="Chat">
+<i class="fas fa-comments"></i></button>
+
+<button class="btn-icon morado" title="Conversaciones">
+<i class="fas fa-comment-dots"></i></button>
+
+<button class="btn-icon naranja" title="Enviar">
+<i class="fas fa-paper-plane"></i></button>
+
+<button class="btn-icon amarillo" title="Avisos">
+<i class="fas fa-bullhorn"></i></button>
+
+<button class="btn-icon rojo" title="Mensajes importantes">
+<i class="fas fa-envelope-circle-check"></i></button>
+
+<button class="btn-icon turquesa" title="Contactos">
+<i class="fas fa-address-book"></i></button>
+
+<button class="btn-icon rosado" title="Menciones">
+<i class="fas fa-at"></i></button>
+
+<button class="btn-icon oscuro" title="Llamadas">
+<i class="fas fa-phone"></i></button>
+
+</div>
+
+
+<!-- =================================== -->
+<!-- 17. FLUJOS Y PROCESOS -->
+<!-- =================================== -->
+<h3>17. Procesos y gestión de tareas</h3>
+<div class="grupo">
+
+<button class="btn-icon azul" title="Procesos">
+<i class="fas fa-diagram-project"></i></button>
+
+<button class="btn-icon verde" title="Nueva tarea">
+<i class="fas fa-list-check"></i></button>
+
+<button class="btn-icon amarillo" title="Tareas pendientes">
+<i class="fas fa-hourglass-half"></i></button>
+
+<button class="btn-icon celeste" title="En proceso">
+<i class="fas fa-spinner"></i></button>
+
+<button class="btn-icon verde" title="Tarea completada">
+<i class="fas fa-check-double"></i></button>
+
+<button class="btn-icon rojo" title="Tarea vencida">
+<i class="fas fa-calendar-xmark"></i></button>
+
+<button class="btn-icon morado" title="Asignar responsable">
+<i class="fas fa-user-tag"></i></button>
+
+<button class="btn-icon naranja" title="Prioridad">
+<i class="fas fa-fire"></i></button>
+
+<button class="btn-icon turquesa" title="Flujo de trabajo">
+<i class="fas fa-code-branch"></i></button>
+
+<button class="btn-icon oscuro" title="Dependencias">
+<i class="fas fa-link"></i></button>
+
+<button class="btn-icon gris" title="Reordenar">
+<i class="fas fa-arrow-down-up-across-line"></i></button>
+
+</div>
+
+
+<!-- =================================== -->
+<!-- 18. SEGURIDAD AVANZADA -->
+<!-- =================================== -->
+<h3>18. Seguridad y control de acceso</h3>
+<div class="grupo">
+
+<button class="btn-icon verde" title="Verificar identidad">
+<i class="fas fa-user-check"></i></button>
+
+<button class="btn-icon rojo" title="Bloquear usuario">
+<i class="fas fa-user-lock"></i></button>
+
+<button class="btn-icon azul" title="Autenticación">
+<i class="fas fa-shield-halved"></i></button>
+
+<button class="btn-icon morado" title="Doble autenticación">
+<i class="fas fa-mobile-screen-button"></i></button>
+
+<button class="btn-icon naranja" title="Alertas de seguridad">
+<i class="fas fa-shield-virus"></i></button>
+
+<button class="btn-icon celeste" title="Permisos de acceso">
+<i class="fas fa-key"></i></button>
+
+<button class="btn-icon amarillo" title="Sesiones activas">
+<i class="fas fa-users-viewfinder"></i></button>
+
+<button class="btn-icon oscuro" title="Privacidad">
+<i class="fas fa-user-secret"></i></button>
+
+<button class="btn-icon turquesa" title="Verificar integridad">
+<i class="fas fa-fingerprint"></i></button>
+
+<button class="btn-icon gris" title="Políticas">
+<i class="fas fa-scale-balanced"></i></button>
+
+</div>
+
+
+<!-- =================================== -->
+<!-- 19. BASE DE DATOS -->
+<!-- =================================== -->
+<h3>19. Base de datos y mantenimiento</h3>
+<div class="grupo">
+
+<button class="btn-icon azul" title="Base de datos">
+<i class="fas fa-database"></i></button>
+
+<button class="btn-icon verde" title="Crear respaldo">
+<i class="fas fa-database"></i></button>
+
+<button class="btn-icon celeste" title="Restaurar respaldo">
+<i class="fas fa-cloud-arrow-down"></i></button>
+
+<button class="btn-icon morado" title="Sincronización">
+<i class="fas fa-arrows-rotate"></i></button>
+
+<button class="btn-icon naranja" title="Optimizar">
+<i class="fas fa-gauge-high"></i></button>
+
+<button class="btn-icon rojo" title="Depurar">
+<i class="fas fa-broom"></i></button>
+
+<button class="btn-icon amarillo" title="Migraciones">
+<i class="fas fa-code-merge"></i></button>
+
+<button class="btn-icon oscuro" title="Consola">
+<i class="fas fa-terminal"></i></button>
+
+<button class="btn-icon turquesa" title="Servidor">
+<i class="fas fa-server"></i></button>
+
+<button class="btn-icon gris" title="Mantenimiento">
+<i class="fas fa-screwdriver-wrench"></i></button>
+
+<button class="btn-icon verde" title="Comprobar conexión">
+<i class="fas fa-circle-nodes"></i></button>
+
+<button class="btn-icon rojo" title="Desconectar servidor">
+<i class="fas fa-power-off"></i></button>
+
+</div>
+
+
+<!-- =================================== -->
+<!-- 20. SOPORTE Y AYUDA -->
+<!-- =================================== -->
+<h3>20. Soporte técnico y ayuda</h3>
+<div class="grupo">
+
+<button class="btn-icon azul" title="Centro de ayuda">
+<i class="fas fa-circle-question"></i></button>
+
+<button class="btn-icon verde" title="Nuevo ticket">
+<i class="fas fa-ticket"></i></button>
+
+<button class="btn-icon amarillo" title="Tickets pendientes">
+<i class="fas fa-ticket-simple"></i></button>
+
+<button class="btn-icon naranja" title="Soporte técnico">
+<i class="fas fa-headset"></i></button>
+
+<button class="btn-icon celeste" title="Documentación">
+<i class="fas fa-book-open"></i></button>
+
+<button class="btn-icon morado" title="Tutoriales">
+<i class="fas fa-graduation-cap"></i></button>
+
+<button class="btn-icon rojo" title="Reportar error">
+<i class="fas fa-bug"></i></button>
+
+<button class="btn-icon turquesa" title="Soluciones">
+<i class="fas fa-lightbulb"></i></button>
+
+<button class="btn-icon oscuro" title="Diagnóstico">
+<i class="fas fa-stethoscope"></i></button>
+
+<button class="btn-icon gris" title="Acerca del sistema">
+<i class="fas fa-circle-info"></i></button>
+
+</div>
+
+
+<!-- =================================== -->
+<!-- 21. ACCIONES ADICIONALES -->
+<!-- =================================== -->
+<h3>21. Acciones generales adicionales</h3>
+<div class="grupo">
+
+<button class="btn-icon azul" title="Copiar">
+<i class="fas fa-copy"></i></button>
+
+<button class="btn-icon celeste" title="Pegar">
+<i class="fas fa-paste"></i></button>
+
+<button class="btn-icon naranja" title="Cortar">
+<i class="fas fa-scissors"></i></button>
+
+<button class="btn-icon morado" title="Mover">
+<i class="fas fa-arrows-up-down-left-right"></i></button>
+
+<button class="btn-icon verde" title="Seleccionar todo">
+<i class="fas fa-check-double"></i></button>
+
+<button class="btn-icon gris" title="Deshacer">
+<i class="fas fa-rotate-left"></i></button>
+
+<button class="btn-icon oscuro" title="Rehacer">
+<i class="fas fa-rotate-right"></i></button>
+
+<button class="btn-icon amarillo" title="Marcar como favorito">
+<i class="fas fa-star"></i></button>
+
+<button class="btn-icon rojo" title="Quitar de favoritos">
+<i class="fas fa-heart-crack"></i></button>
+
+<button class="btn-icon turquesa" title="Vista de cuadrícula">
+<i class="fas fa-table-cells-large"></i></button>
+
+<button class="btn-icon azul" title="Vista de lista">
+<i class="fas fa-list-ul"></i></button>
+
+<button class="btn-icon morado" title="Vista de tabla">
+<i class="fas fa-table"></i></button>
+
+<button class="btn-icon celeste" title="Ordenar ascendente">
+<i class="fas fa-arrow-down-a-z"></i></button>
+
+<button class="btn-icon naranja" title="Ordenar descendente">
+<i class="fas fa-arrow-down-z-a"></i></button>
+
+<button class="btn-icon gris" title="Más opciones">
+<i class="fas fa-ellipsis"></i></button>
+
+</div>
+
+</body>
+</html>

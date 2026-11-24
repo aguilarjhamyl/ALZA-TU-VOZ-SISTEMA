@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Plataforma de calma | Alza Tu Voz{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/wellbeing.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="workflow-page">
+    <div class="container workflow-container">
+        <div class="workflow-heading">
+            <span class="eyebrow">ACTIVIDAD VOLUNTARIA</span>
+            <h1>Plataforma de calma</h1>
+            <p>Sigue el pulso visual a tu propio ritmo. No tienes que cambiar tu respiración para hacerlo bien.</p>
+        </div>
+
+        <div class="workflow-notice">
+            <i class="bi bi-heart-pulse" aria-hidden="true"></i>
+            <p>Esta actividad es una pausa de bienestar, no es tratamiento ni reemplaza el apoyo de una persona de confianza. Si te incomoda o sientes mareo, detente y respira con normalidad.</p>
+        </div>
+
+        <section class="calm-card" aria-labelledby="calm-title" data-breathing-exercise>
+            <h2 id="calm-title">Dos minutos de pausa</h2>
+            <div class="calm-orbit" aria-hidden="true">
+                <div class="calm-pulse" data-breathing-pulse></div>
+            </div>
+            <p class="calm-phase" data-breathing-phase aria-live="polite">Cuando quieras, comienza.</p>
+            <p class="calm-timer" data-breathing-timer aria-label="Tiempo restante">02:00</p>
+            <div class="calm-actions">
+                <button class="btn btn--primary btn-primary" type="button" data-breathing-start>Comenzar</button>
+                <button class="btn btn--secondary btn-outline-secondary" type="button" data-breathing-stop disabled>Detener</button>
+            </div>
+            <a class="workflow-text-link" href="{% url 'casos:tests' %}">Volver a bienestar <i class="bi bi-arrow-left" aria-hidden="true"></i></a>
+        </section>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/wellbeing.js' %}" defer></script>
+{% endblock %}

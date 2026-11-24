@@ -1,0 +1,26 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}{{ modulo.title }} | Alza TU Voz{% endblock %}
+
+{% block content %}
+<main class="admin-under-construction">
+    <section class="admin-under-construction__card" aria-labelledby="module-title">
+        <span class="admin-under-construction__icon" aria-hidden="true">
+            <i class="bi {{ modulo.icon }}"></i>
+        </span>
+        <span class="admin-dashboard__eyebrow">MÓDULO ADMINISTRATIVO</span>
+        <h1 id="module-title">{{ modulo.title }}</h1>
+        <p>{{ modulo.description }}</p>
+        <span class="admin-under-construction__status">
+            <i class="bi bi-cone-striped" aria-hidden="true"></i>
+            En construcción
+        </span>
+        <div>
+            <a class="admin-button admin-button--primary" href="{% url 'dashboard:inicio' %}">
+                <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                Volver al panel
+            </a>
+        </div>
+    </section>
+</main>
+{% endblock %}

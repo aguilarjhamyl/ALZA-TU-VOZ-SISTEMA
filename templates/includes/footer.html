@@ -1,0 +1,33 @@
+
+<footer class="site-footer">
+    <div class="site-footer__inner container d-flex align-items-center justify-content-between">
+
+        <div>
+            <a href="{% url 'inicio' %}" aria-label="Volver al inicio">
+                <strong>ALZA TU VOZ</strong>
+            </a>
+
+            <p class="site-footer__message">
+                <i class="bi bi-heart-fill" aria-hidden="true"></i>
+                Tu bienestar importa. Siempre puedes pedir ayuda.
+            </p>
+        </div>
+
+        <div class="site-footer__copy">
+            {% if not user.is_authenticated %}
+                <a class="site-footer__contact" href="{% url 'registro' %}">
+                    <i class="bi bi-envelope" aria-hidden="true"></i>
+                    ¿Primera vez? Crea tu cuenta
+                </a>
+            {% endif %}
+            <p>
+                Sistema de orientación y acompañamiento para la comunidad educativa.
+            </p>
+            <p>
+                &copy; <span id="current-year">2026</span>
+                ALZA TU VOZ. Todos los derechos reservados.
+            </p>
+        </div>
+
+    </div>
+</footer>

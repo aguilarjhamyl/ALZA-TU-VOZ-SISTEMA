@@ -1,0 +1,367 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}Panel institucional | Alza Tu Voz{% endblock %}
+
+{% block content %}
+{% if es_administrador %}
+<section class="admin-dashboard" data-admin-dashboard>
+    <div class="container-fluid admin-dashboard__container">
+        <div class="admin-dashboard__topbar">
+            <div class="admin-dashboard__page-title">
+                <span class="admin-dashboard__eyebrow">ALZA TU VOZ · ADMINISTRACIÓN</span>
+                <h1>Panel de control</h1>
+                <p>Resumen operativo de la plataforma y accesos de gestión institucional.</p>
+            </div>
+            <div class="admin-dashboard__top-actions">
+                <span class="admin-dashboard__today">
+                    <i class="bi bi-calendar3" aria-hidden="true"></i>
+                    {% now "d/m/Y" %}
+                </span>
+                <a class="admin-icon-btn admin-icon-btn--teal"
+                   href="{% url 'dashboard:tabla' 'rol' %}"
+                   title="Configurar roles"
+                   aria-label="Configurar roles">
+                    <i class="bi bi-gear" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="admin-dashboard__main">
+                <div class="admin-dashboard__welcome">
+                    <div>
+                        <span class="admin-dashboard__eyebrow">VISTA GENERAL</span>
+                        <h2>Hola, {% firstof usuario.first_name usuario.username %}</h2>
+                        <p>Estos indicadores reflejan los registros disponibles en la base institucional.</p>
+                    </div>
+                    <a class="admin-button admin-button--teal" href="{% url 'dashboard:tabla' 'usuarios' %}">
+                        <i class="bi bi-person-check" aria-hidden="true"></i> Revisar solicitudes
+                    </a>
+                </div>
+
+                {% if not casos_disponibles %}
+                <div class="admin-alert" role="status">
+                    <i class="bi bi-database-exclamation" aria-hidden="true"></i>
+                    <span>Las tablas institucionales de casos no están disponibles en esta base de datos. Las métricas se mostrarán al conectar el esquema correspondiente.</span>
+                </div>
+                {% endif %}
+
+                <div class="admin-metrics">
+                    <article class="admin-metric-card">
+                        <span class="admin-metric-card__icon admin-metric-card__icon--blue"><i class="bi bi-people" aria-hidden="true"></i></span>
+                        <span class="admin-metric-card__label">CUENTAS ACTIVAS</span>
+                        <strong>{{ usuarios_activos }}</strong>
+                        <small>Usuarios habilitados</small>
+                    </article>
+                    <article class="admin-metric-card">
+                        <span class="admin-metric-card__icon admin-metric-card__icon--orange"><i class="bi bi-person-lines-fill" aria-hidden="true"></i></span>
+                        <span class="admin-metric-card__label">SOLICITUDES</span>
+                        <strong>{{ solicitudes_pendientes }}</strong>
+                        <small>Pendientes de revisión</small>
+                    </article>
+                    <article class="admin-metric-card">
+                        <span class="admin-metric-card__icon admin-metric-card__icon--teal"><i class="bi bi-folder2-open" aria-hidden="true"></i></span>
+                        <span class="admin-metric-card__label">CASOS REGISTRADOS</span>
+                        <strong>{% if total_casos is not None %}{{ total_casos }}{% else %}—{% endif %}</strong>
+                        <small>{% if casos_abiertos is not None %}{{ casos_abiertos }} en atención{% else %}Datos no disponibles{% endif %}</small>
+                    </article>
+                    <article class="admin-metric-card">
+                        <span class="admin-metric-card__icon admin-metric-card__icon--red"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i></span>
+                        <span class="admin-metric-card__label">ALERTAS PRIORITARIAS</span>
+                        <strong>{% if casos_prioritarios is not None %}{{ casos_prioritarios }}{% else %}—{% endif %}</strong>
+                        <small>Casos con alerta de riesgo</small>
+                    </article>
+                    <article class="admin-metric-card">
+                        <span class="admin-metric-card__icon admin-metric-card__icon--violet"><i class="bi bi-chat-heart" aria-hidden="true"></i></span>
+                        <span class="admin-metric-card__label">CHATBOT</span>
+                        <strong>{% if conversaciones_pendientes is not None %}{{ conversaciones_pendientes }}{% else %}—{% endif %}</strong>
+                        <small>Conversaciones por atender</small>
+                    </article>
+                    <article class="admin-metric-card">
+                        <span class="admin-metric-card__icon admin-metric-card__icon--green"><i class="bi bi-list-check" aria-hidden="true"></i></span>
+                        <span class="admin-metric-card__label">SEGUIMIENTOS</span>
+                        <strong>{% if acciones_pendientes is not None %}{{ acciones_pendientes }}{% else %}—{% endif %}</strong>
+                        <small>Acciones pendientes</small>
+                    </article>
+                </div>
+
+                <div class="admin-chart-grid">
+                    <section class="admin-panel admin-chart-panel">
+                        <div class="admin-panel__heading">
+                            <div><span class="admin-dashboard__eyebrow">ACTIVIDAD</span><h3>Casos registrados</h3></div>
+                            <span class="admin-panel__period">Últimos 7 días</span>
+                        </div>
+                        {% if casos_disponibles %}
+                        <div class="admin-week-chart" role="img" aria-label="Casos creados por día durante los últimos siete días">
+                            {% for dia in actividad_semanal %}
+                            <div class="admin-week-chart__item">
+                                <span class="admin-week-chart__value">{{ dia.cantidad }}</span>
+                                <div class="admin-week-chart__track"><span style="height: {% if dia.porcentaje %}{{ dia.porcentaje }}{% else %}3{% endif %}%"></span></div>
+                                <span class="admin-week-chart__label">{{ dia.etiqueta }}</span>
+                            </div>
+                            {% empty %}
+                            <p class="admin-empty">Todavía no hay actividad registrada.</p>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p class="admin-empty">La gráfica estará disponible cuando se conecte la tabla de casos.</p>
+                        {% endif %}
+                    </section>
+
+                    <section class="admin-panel admin-chart-panel">
+                        <div class="admin-panel__heading">
+                            <div><span class="admin-dashboard__eyebrow">DISTRIBUCIÓN</span><h3>Casos por estado</h3></div>
+                            <i class="bi bi-pie-chart admin-panel__heading-icon" aria-hidden="true"></i>
+                        </div>
+                        {% if casos_disponibles %}
+                        <div class="admin-status-chart">
+                            {% for estado in estados_casos %}
+                            <div class="admin-status-chart__row">
+                                <span class="admin-status-chart__name">{{ estado.nombre }}</span>
+                                <div class="admin-status-chart__track"><span style="width: {{ estado.porcentaje }}%"></span></div>
+                                <strong>{{ estado.total }}</strong>
+                            </div>
+                            {% empty %}
+                            <p class="admin-empty">Todavía no hay casos registrados.</p>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p class="admin-empty">La distribución estará disponible cuando se conecten las tablas de casos.</p>
+                        {% endif %}
+                    </section>
+
+                    <section class="admin-panel admin-chart-panel admin-chart-panel--wide">
+                        <div class="admin-panel__heading">
+                            <div><span class="admin-dashboard__eyebrow">PRIORIZACIÓN</span><h3>Casos por nivel de riesgo</h3></div>
+                            <i class="bi bi-shield-exclamation admin-panel__heading-icon" aria-hidden="true"></i>
+                        </div>
+                        {% if casos_disponibles %}
+                        <div class="admin-risk-chart">
+                            {% for nivel in niveles_riesgo %}
+                            <div class="admin-risk-chart__row">
+                                <span>{{ nivel.nombre }}</span>
+                                <div class="admin-status-chart__track"><span style="width: {{ nivel.porcentaje }}%"></span></div>
+                                <strong>{{ nivel.total }}</strong>
+                            </div>
+                            {% empty %}
+                            <p class="admin-empty">Todavía no hay casos con nivel de riesgo registrado.</p>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p class="admin-empty">La distribución estará disponible cuando se conecten las tablas de casos.</p>
+                        {% endif %}
+                    </section>
+                </div>
+
+                <div class="admin-dashboard__section-heading">
+                    <div><span class="admin-dashboard__eyebrow">ACCESO DIRECTO</span><h3>Gestión de tablas</h3></div>
+                    <span>Abre las tablas y operaciones disponibles para administración.</span>
+                </div>
+                <div class="admin-module-grid">
+                    {% for shortcut in admin_shortcuts %}
+                    <a class="admin-module-card" href="{{ shortcut.url }}">
+                        <span class="admin-module-card__icon admin-module-card__icon--{{ shortcut.color }}"><i class="bi {{ shortcut.icon }}" aria-hidden="true"></i></span>
+                        <span class="admin-module-card__body"><strong>{{ shortcut.title }}</strong><small>Consultar y gestionar registros</small></span>
+                        <span class="admin-module-card__state is-live">Abrir tabla</span>
+                    </a>
+                    {% endfor %}
+                </div>
+
+                <section class="admin-panel admin-recent-panel">
+                    <div class="admin-panel__heading">
+                        <div><span class="admin-dashboard__eyebrow">ACTUALIZACIONES</span><h3>Casos recientes</h3></div>
+                        <a class="admin-text-link" href="{% url 'casos:mis_casos' %}">Ver todos <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                    {% if casos_disponibles %}
+                    <div class="table-responsive">
+                        <table class="admin-data-table">
+                            <thead><tr><th>CÓDIGO</th><th>ESTADO</th><th>NIVEL DE RIESGO</th><th>FECHA</th><th class="text-end">ACCIÓN</th></tr></thead>
+                            <tbody>
+                                {% for caso in casos_recientes %}
+                                <tr>
+                                    <td><strong>{{ caso.codigo_caso }}</strong></td>
+                                    <td><span class="admin-table-status">{{ caso.id_estado_caso.nombre }}</span></td>
+                                    <td>{% if caso.id_nivel_riesgo %}<span class="admin-risk-label">{{ caso.id_nivel_riesgo.nombre }}</span>{% else %}<span class="admin-muted">Sin clasificar</span>{% endif %}</td>
+                                    <td>{{ caso.creado_en|date:"d/m/Y" }}</td>
+                                    <td class="text-end">
+                                        <a class="admin-icon-btn admin-icon-btn--blue" href="{% url 'casos:detalle' caso.pk %}"
+                                           title="Consultar caso {{ caso.codigo_caso }}" aria-label="Consultar caso {{ caso.codigo_caso }}">
+                                            <i class="bi bi-eye" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr><td class="admin-empty-cell" colspan="5">Todavía no hay casos registrados.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="admin-empty">La tabla de casos recientes estará disponible cuando se conecte el esquema institucional.</p>
+                    {% endif %}
+                </section>
+
+                <footer class="admin-dashboard__footer">
+                    <span><i class="bi bi-shield-check" aria-hidden="true"></i> Acceso administrativo protegido</span>
+                    <span>Alza TU Voz · Panel de control</span>
+                </footer>
+        </div>
+    </div>
+</section>
+{% else %}
+<section class="dashboard-page">
+    <div class="container">
+
+        <div class="dashboard-welcome d-flex align-items-center justify-content-between gap-4">
+            <div>
+                <span class="eyebrow">
+                    <i class="bi bi-building me-2" aria-hidden="true"></i>
+                    ESPACIO INSTITUCIONAL
+                </span>
+
+                <h1>
+                    Bienvenido,
+                    <span>
+                        {% firstof usuario.get_full_name usuario.username %}
+                    </span>
+                </h1>
+
+                <p>
+                    Desde aquí podrás acceder a las herramientas
+                    de gestión institucional disponibles.
+                </p>
+            </div>
+
+            <div class="dashboard-user d-flex align-items-center gap-3">
+                <div class="dashboard-user__avatar" aria-hidden="true">
+                    {% firstof usuario.first_name.0 usuario.username.0 "U" %}
+                </div>
+
+                <div>
+                    <strong>
+                        {% firstof usuario.get_full_name usuario.username %}
+                    </strong>
+                    <small>
+                        {% if usuario.is_superuser %}
+                            Administrador del sistema
+                        {% elif usuario.is_staff %}
+                            Personal autorizado
+                        {% else %}
+                            {{ usuario.get_rol_display|default:usuario.rol }}
+                        {% endif %}
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-notice alert alert-info d-flex align-items-start gap-3" role="status">
+            <i class="bi bi-info-circle-fill" aria-hidden="true"></i>
+            <p>
+                Las opciones disponibles dependen de los permisos
+                asignados a tu cuenta.
+            </p>
+        </div>
+
+        <div class="dashboard-section-heading">
+            <div>
+                <span class="eyebrow">ACCESOS RÁPIDOS</span>
+                <h2>Gestión institucional</h2>
+            </div>
+        </div>
+
+        <div class="dashboard-grid row g-4">
+
+            {% if usuario.is_staff or usuario.is_superuser or usuario.rol == "DIRECTOR" or usuario.rol == "PSICOLOGO" %}
+            <article class="col-md-6">
+              <div class="dashboard-card card h-100">
+                <div class="dashboard-card__icon dashboard-card__icon--blue">
+                    <i class="bi bi-clipboard-data" aria-hidden="true"></i>
+                </div>
+
+                <span class="dashboard-card__label">REPORTES</span>
+                <h3>Gestión de reportes</h3>
+
+                <p>
+                    Accede a las herramientas administrativas
+                    disponibles para gestionar información.
+                </p>
+
+                <a href="{% url 'casos:mis_casos' %}" class="dashboard-card__link btn btn-link p-0">
+                    Revisar reportes <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                </a>
+              </div>
+            </article>
+
+            <article class="col-md-6">
+              <div class="dashboard-card card h-100">
+                <div class="dashboard-card__icon dashboard-card__icon--green">
+                    <i class="bi bi-heart-pulse" aria-hidden="true"></i>
+                </div>
+
+                <span class="dashboard-card__label">SEGUIMIENTO</span>
+                <h3>Seguimiento de casos</h3>
+
+                <p>
+                    Consulta el estado de los casos y registra las acciones
+                    de acompañamiento realizadas.
+                </p>
+
+                <a href="{% url 'casos:mis_casos' %}" class="dashboard-card__link btn btn-link p-0">
+                    Abrir casos <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                </a>
+              </div>
+            </article>
+
+            <article class="col-md-6">
+              <div class="dashboard-card card h-100">
+                <div class="dashboard-card__icon dashboard-card__icon--violet">
+                    <i class="bi bi-chat-heart" aria-hidden="true"></i>
+                </div>
+
+                <span class="dashboard-card__label">ORIENTACIÓN</span>
+                <h3>Chatbot de acompañamiento</h3>
+
+                <p>
+                    Revisa las conversaciones que solicitaron acompañamiento humano.
+                </p>
+
+                <a href="{% url 'casos:atencion_chatbot' %}" class="dashboard-card__link btn btn-link p-0">
+                    Abrir bandeja de atención <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                </a>
+              </div>
+            </article>
+            {% endif %}
+
+            <article class="col-md-6">
+              <div class="dashboard-card card h-100">
+                <div class="dashboard-card__icon dashboard-card__icon--teal">
+                    <i class="bi bi-gear" aria-hidden="true"></i>
+                </div>
+
+                <span class="dashboard-card__label">CONFIGURACIÓN</span>
+                <h3>Administración del sistema</h3>
+
+                <p>
+                    Accede al sitio de administración de Django
+                    si tu cuenta tiene los permisos necesarios.
+                </p>
+
+                <a href="{% url 'dashboard:inicio' %}" class="dashboard-card__link btn btn-link p-0">
+                    Abrir panel institucional <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                </a>
+              </div>
+            </article>
+
+        </div>
+
+        <div class="dashboard-footer-note d-flex align-items-center gap-3">
+            <span class="status-dot"></span>
+            <p>
+                Sesión iniciada como
+                <strong>{{ usuario.username }}</strong>
+            </p>
+        </div>
+
+    </div>
+</section>
+{% endif %}
+{% endblock %}

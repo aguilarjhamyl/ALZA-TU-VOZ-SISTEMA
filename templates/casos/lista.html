@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load catalogo %}
+
+{% block title %}Casos | Alza Tu Voz{% endblock %}
+
+{% block content %}
+<section class="workflow-page">
+    <div class="container workflow-container">
+        <div class="workflow-heading workflow-heading--row">
+            <div>
+                <span class="eyebrow">{% if user.is_staff or user.is_superuser or user.rol == "ADMIN" or user.rol == "DIRECTOR" %}GESTIÓN INSTITUCIONAL{% else %}ESPACIO PERSONAL{% endif %}</span>
+                <h1>{% if user.is_staff or user.is_superuser or user.rol == "ADMIN" or user.rol == "DIRECTOR" %}Reportes recibidos{% else %}Mis reportes{% endif %}</h1>
+                <p>{% if user.is_staff or user.is_superuser or user.rol == "ADMIN" or user.rol == "DIRECTOR" %}Consulta los casos disponibles para tu perfil y registra las acciones de seguimiento.{% else %}Consulta el estado de tus reportes y responde cuando el equipo te solicite información.{% endif %}</p>
+            </div>
+            <a class="btn btn--primary btn-primary" href="{% url 'casos:crear' %}">
+                <i class="bi bi-plus-lg" aria-hidden="true"></i> Nuevo reporte
+            </a>
+        </div>
+
+        {% if casos %}
+            <div class="workflow-list">
+                {% for caso in casos %}
+                    <article class="workflow-list-card">
+                        <div class="workflow-list-card__main">
+                            <span class="case-code">{{ caso.codigo_caso }}</span>
+                            <h2><a href="{% url 'casos:detalle' caso.id_caso %}">{{ caso.titulo }}</a></h2>
+                            <p>{{ caso.id_tipo_incidente.nombre|catalogo }} · Reportado {{ caso.creado_en|date:"d/m/Y H:i" }}</p>
+                        </div>
+                        <div class="workflow-list-card__status">
+                            <span class="case-status" {% if caso.id_estado_caso.color_hex %}style="--case-status-color: {{ caso.id_estado_caso.color_hex }}"{% endif %}>{{ caso.id_estado_caso.nombre|catalogo }}</span>
+                            <a class="workflow-text-link" href="{% url 'casos:detalle' caso.id_caso %}">Ver detalle <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="workflow-empty-card">
+                <span class="workflow-empty-card__icon"><i class="bi bi-inbox" aria-hidden="true"></i></span>
+                <h2>Aún no hay reportes</h2>
+                <p>Cuando se registre un reporte disponible para tu cuenta, aparecerá en esta lista.</p>
+                <a class="btn btn--primary btn-primary" href="{% url 'casos:crear' %}">Crear un reporte</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
